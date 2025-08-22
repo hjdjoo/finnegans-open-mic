@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { createClient } from "@/lib/clientSupabase";
+import { supabase } from "@/lib/clientSupabase";
 import type { User } from '@supabase/supabase-js';
 
 interface AuthGuardProps {
@@ -24,7 +24,6 @@ export default function AuthGuard({
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const supabase = createClient();
 
   useEffect(() => {
     // Check current auth state
@@ -67,7 +66,7 @@ export default function AuthGuard({
     return () => {
       subscription.unsubscribe();
     };
-  }, [router, requireAuth, supabase]);
+  }, [router, requireAuth]);
 
   if (loading) {
     return <>{fallback}</>;

@@ -8,4 +8,6 @@ function createClient() {
    return createBrowserClient<Database>(SUPABASE_URL, SUPABASE_KEY);
   }
 
-export  { createClient };
+const supabase = createClient();
+
+export  { supabase };
