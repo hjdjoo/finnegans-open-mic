@@ -1,4 +1,3 @@
-// lib/supabase/middleware.ts
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 import { SUPABASE_COOKIE_OPTIONS, SUPABASE_AUTH_OPTIONS } from './serverSupabase';
@@ -65,6 +64,7 @@ export async function updateSession(request: NextRequest) {
   // IMPORTANT: Only check session, not user!
   // This validates the JWT without a database call
   const { data: { session } } = await supabase.auth.getSession();
+  console.log('Session updated in middleware:', session);
 
   // Only protect routes if there's no valid session
   // The actual user verification happens in the protected pages

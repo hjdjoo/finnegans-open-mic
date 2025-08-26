@@ -30,20 +30,13 @@ export default function AuthGuard({
     const checkAuth = async () => {
       try {
         // This only checks the session, not the database
-        const { data: { session } } = await supabase.auth.getSession();
-
-        if (session?.user) {
-          setUser(session.user);
-        } else if (requireAuth) {
-          router.push('/login');
-        }
-      } catch (error) {
-        console.error('Auth check failed:', error);
-        if (requireAuth) {
-          router.push('/login');
-        }
-      } finally {
+        const { data: { user } } = await supabase.auth.getUser();
+        setUser(user);
         setLoading(false);
+      } catch (error) {
+        console.error('Error checking auth state:', error);
+        setLoading(false);
+        router.push('/');
       }
     };
 
@@ -53,13 +46,18 @@ export default function AuthGuard({
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (session?.user) {
-        setUser(session.user);
-      } else {
-        setUser(null);
-        if (requireAuth) {
-          router.push('/login');
-        }
+      switch (event) {
+        case 'SIGNED_IN':
+          setUser(session?.user || null);
+          break;
+        case 'SIGNED_OUT':
+          setUser(null);
+          if (requireAuth) {
+            router.push('/login');
+          }
+          break;
+        default:
+          break;
       }
     });
 

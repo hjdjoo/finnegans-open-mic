@@ -1,10 +1,9 @@
-import { CookieMethods, CookieOptions, createServerClient} from '@supabase/ssr';
+import { CookieMethods, createServerClient} from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import type { Database } from './database.types';
 import { CookieSerializeOptions } from 'cookie';
 import type { RequestCookies } from 'next/dist/server/web/spec-extension/cookies';
 import {cache} from 'react';
-
 
 // Extend CookieMethods to include getAll and setAll
 export interface CookieHandler extends CookieMethods {
@@ -13,26 +12,25 @@ export interface CookieHandler extends CookieMethods {
 }
 
 export const SUPABASE_COOKIE_OPTIONS = {
-  lifetime: 60 * 60 * 8,         // Session lifetime in seconds (8 hours)
-  domain: undefined,              // Cookie domain (undefined = current domain)
-  path: '/',                      // Cookie path
-  sameSite: 'lax' as const,      // CSRF protection ('lax' allows OAuth redirects)
-  secure: process.env.NODE_ENV === 'production', // HTTPS only in production
+  lifetime: 60 * 60 * 8,         
+  domain: undefined,              
+  path: '/',                      
+  sameSite: 'lax' as const,      
+  secure: process.env.NODE_ENV === 'production', 
 } as const;
 
 export const SUPABASE_AUTH_OPTIONS = {
-  autoRefreshToken: true,         // Auto refresh tokens before expiry
-  persistSession: true,           // Persist session to storage
-  detectSessionInUrl: true,       // Check URL for session (OAuth redirects)
+  autoRefreshToken: true,        
+  persistSession: true,          
+  detectSessionInUrl: true,      
+  flowType: 'pkce' as const,
 } as const;
 
 
 function createCookieHandler(
   cookieStore: Awaited<ReturnType<typeof cookies>> | RequestCookies,
-  options?: {
-    responseModifier?: (name: string, value: string, options?: CookieOptions) => void;
-  }
 ): CookieHandler {
+
   return {
     get(name) {
       const cookie = cookieStore.get(name);
@@ -43,7 +41,6 @@ function createCookieHandler(
       try {
         cookieStore.set(name, value, cookieOptions);
         // Also update response if we're in middleware context
-        options?.responseModifier?.(name, value, cookieOptions);
       } catch {
         // Server Component context - safe to ignore
         if (process.env.NODE_ENV === 'development') {
@@ -55,7 +52,7 @@ function createCookieHandler(
     remove(name, cookieOptions) {
       try {
         cookieStore.set(name, '', { ...cookieOptions, maxAge: 0 });
-        options?.responseModifier?.(name, '', { ...cookieOptions, maxAge: 0 });
+
       } catch {
         // Server Component context
       }
@@ -69,7 +66,7 @@ function createCookieHandler(
       try {
         cookiesToSet.forEach(({ name, value, options: cookieOptions }) => {
           cookieStore.set(name, value, cookieOptions);
-          options?.responseModifier?.(name, value, cookieOptions);
+
         });
       } catch {
         // Server Component context
@@ -93,30 +90,6 @@ const createClient = cache(async () => {
     }
   )
 })
-
-/**
- * Use this in middleware for session management
- * @returns session data without making a DB call
- */
-export async function getSessionWithoutDBCall() {
-  const supabase = await createClient();
-  
-  const { data: { session }, error } = await supabase.auth.getSession();
-  
-  return { session, error };
-}
-/**
- * Use this sparingly for user verification
- * @returns the user with a DB call
- */
-export async function getUserWithDBCall() {
-  const supabase = await createClient();
-  
-  // This makes a database call to verify the user
-  const { data: { user }, error } = await supabase.auth.getUser();
-  
-  return { user, error };
-}
 
 
 export default createClient
