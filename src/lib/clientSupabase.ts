@@ -7,7 +7,5 @@ const SUPABASE_KEY=process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!
 function createClient() { 
    return createBrowserClient<Database>(SUPABASE_URL, SUPABASE_KEY);
   }
-
-const supabase = createClient();
-
-export  { supabase };
+  
+export default createClient

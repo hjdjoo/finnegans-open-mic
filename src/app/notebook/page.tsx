@@ -1,8 +1,11 @@
 import { BookOpenIcon } from '@heroicons/react/24/outline'
-import { supabase } from '@/lib/clientSupabase'
+import createClient from '@/lib/clientSupabase'
 import Image from 'next/image'
 
 async function getNotebookImages() {
+
+  const supabase = createClient();
+
   const { data, error } = await supabase
     .from('images')
     .select('*')

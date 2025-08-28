@@ -7,6 +7,8 @@ import { usePathname } from 'next/navigation'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import clsx from 'clsx'
 
+const DEV = process.env.NODE_ENV === "development"
+
 const navLinks = [
   { name: 'Home', href: '/' },
   { name: 'Past Mics', href: '/past' },
@@ -15,6 +17,10 @@ const navLinks = [
   { name: 'Contact', href: '/contact' },
   { name: 'Directions', href: '/directions' },
 ]
+
+if (DEV) {
+  navLinks.push({ name: 'Admin', href: '/admin' });
+}
 
 export default function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -51,7 +57,7 @@ export default function Navigation() {
               />
             </div>
             <span className="text-xl font-bold text-irish-gold group-hover:text-irish-gold-light transition-colors">
-              Open Mic Night
+              {`Open Mic at Finnegan's Pub`}
             </span>
           </Link>
 

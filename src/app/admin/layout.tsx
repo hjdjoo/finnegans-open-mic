@@ -1,4 +1,4 @@
-import AuthGuard from '@/components/AuthGuard';
+// import AuthGuard from '@/contexts/AuthGuard';
 
 export default function AdminLayout({
   children,
@@ -6,8 +6,8 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
-    <AuthGuard requireAuth={true}>
+    <>
       {children}
-    </AuthGuard>
+    </>
   );
 }

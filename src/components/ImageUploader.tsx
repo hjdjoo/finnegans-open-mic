@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react'
 import { CloudArrowUpIcon, CheckCircleIcon, XMarkIcon } from '@heroicons/react/24/outline'
-import { supabase } from '@/lib/clientSupabase'
+import createClient from '@/lib/clientSupabase'
 import { compressImage, generateStoragePath, getSundayDate } from '@/lib/utils'
 import clsx from 'clsx'
 import Image from 'next/image'
@@ -18,6 +18,9 @@ interface UploadedImage {
 }
 
 export default function ImageUploader() {
+
+  const supabase = createClient();
+
   const [selectedDate, setSelectedDate] = useState<Date>(getSundayDate(new Date()))
   const [images, setImages] = useState<UploadedImage[]>([])
   const [imageType, setImageType] = useState<'open-mic' | 'notebook'>('open-mic')

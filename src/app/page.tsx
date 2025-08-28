@@ -2,19 +2,15 @@
 import Gallery from '@/components/Gallery'
 import WelcomeCard from '@/components/WelcomeCard'
 import StatusCard from '@/components/StatusCard'
-import { supabase } from '@/lib/clientSupabase'
-import { getLastSunday } from '@/lib/utils'
+import createClient from '@/lib/clientSupabase'
+// import { getLastSunday } from '@/lib/utils'
 import Image from 'next/image'
 
 import { Json } from '@/lib/database.types';
 import type { WelcomeText, OpenMicStatus } from '@/lib/types'
 
 async function getLatestGalleryImages() {
-
-  // const supabase = await createClient()
-
-  // const lastSunday = getLastSunday()
-  // const dateString = lastSunday.toISOString().split('T')[0]
+  const supabase = createClient();
 
   const { data, error } = await supabase
     .from('images')
@@ -33,6 +29,7 @@ async function getLatestGalleryImages() {
 }
 
 async function getSiteSettings() {
+  const supabase = createClient();
 
   // const supabase = await createClient()r
 
@@ -47,7 +44,7 @@ async function getSiteSettings() {
       openMicStatus: { active: true, next_date: null, message: '' },
       welcomeText: {
         title: 'Welcome to Open Mic Night',
-        description: 'Every Sunday at the Irish pub. Sign-ups at 7PM, show starts at 7:30PM.'
+        description: `Every Sunday at Finnegan's Pub in Hoboken. Sign-ups at 7PM, show starts at 7:30PM.`
       } as WelcomeText
     }
   }
@@ -61,7 +58,7 @@ async function getSiteSettings() {
     openMicStatus: (settings?.open_mic_status || { active: true, next_date: null, message: '' }) as OpenMicStatus,
     welcomeText: (settings?.welcome_text || {
       title: 'Welcome to Open Mic Night',
-      description: 'Every Sunday at the Irish pub'
+      description: `Every Sunday at Finnegan's, Hoboken NJ`
     }) as WelcomeText
   }
 }
@@ -103,14 +100,21 @@ export default async function HomePage() {
               aspectRatio="auto"
               arrowPosition="inside"
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-dark-bg/50 via-transparent to-dark-bg/90" />
-            <WelcomeCard
-              title={settings.welcomeText.title}
-              description={settings.welcomeText.description}
-            />
+            <div className="absolute inset-0 bg-gradient-to-b from-dark-bg/50 via-transparent to-dark-bg/90">
+              <WelcomeCard
+                title={settings.welcomeText.title}
+                description={settings.welcomeText.description}
+              />
+            </div>
           </>
         ) : (
           <div className="h-full flex items-center justify-center bg-dark-surface">
+            <div className="absolute inset-0 bg-gradient-to-b from-dark-bg/50 via-transparent to-dark-bg/90">
+              <WelcomeCard
+                title={settings.welcomeText.title}
+                description={settings.welcomeText.description}
+              />
+            </div>
             <div className="text-center">
               <h1 className="text-4xl font-bold text-irish-gold mb-4">
                 Open Mic Night

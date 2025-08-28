@@ -1,9 +1,12 @@
 'use client';
 
 import { useState } from 'react'
-import { supabase } from '@/lib/clientSupabase'
+import createClient from '@/lib/clientSupabase'
+import Spinner from './Spinner';
 
 export default function Login() {
+
+  const supabase = createClient();
   const [loading, setLoading] = useState(false)
 
   const handleGoogleLogin = async () => {
@@ -14,6 +17,7 @@ export default function Login() {
         redirectTo: `http://localhost:3000/admin`,
       },
     })
+
     if (error) {
       console.error('Error logging in:', error)
       setLoading(false)
@@ -30,7 +34,7 @@ export default function Login() {
           className="w-full btn-primary flex items-center justify-center space-x-3"
         >
           {loading ? (
-            <span>Redirecting...</span>
+            <Spinner />
           ) : (
             <>
               <svg className="w-5 h-5" viewBox="0 0 24 24">

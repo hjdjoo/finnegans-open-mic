@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowLeftIcon, BookOpenIcon } from '@heroicons/react/24/outline'
-import { supabase } from '@/lib/clientSupabase'
+import createClient from '@/lib/clientSupabase'
 import Gallery from '@/components/Gallery'
 
 interface PageProps {
@@ -12,6 +12,8 @@ interface PageProps {
 }
 
 async function getGalleryImages(date: string) {
+
+  const supabase = createClient();
   // Validate date format
   const dateRegex = /^\d{4}-\d{2}-\d{2}$/
   if (!dateRegex.test(date)) {

@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { CalendarDaysIcon, PhotoIcon, BookOpenIcon } from '@heroicons/react/24/outline'
-import { supabase } from '@/lib/clientSupabase'
+import createClient from '@/lib/clientSupabase'
 
 type PastMicData = {
   date: string
@@ -9,6 +9,9 @@ type PastMicData = {
 }
 
 async function getPastMics() {
+
+  const supabase = createClient();
+
   const { data, error } = await supabase
     .from('images')
     .select('date, type')

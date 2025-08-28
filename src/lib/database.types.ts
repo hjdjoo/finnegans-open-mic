@@ -47,6 +47,30 @@ export type Database = {
         }
         Relationships: []
       }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string
+          id: number
+          is_admin: boolean
+          uid: string | null
+        }
+        Insert: {
+          created_at?: string
+          email?: string
+          id?: number
+          is_admin: boolean
+          uid?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: number
+          is_admin?: boolean
+          uid?: string | null
+        }
+        Relationships: []
+      }
       site_settings: {
         Row: {
           id: string

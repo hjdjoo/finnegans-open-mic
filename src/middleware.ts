@@ -1,9 +1,16 @@
 import { NextRequest } from "next/server";
-import { updateSession } from "./lib/middleware";
+import { updateSession} from "./lib/middleware";
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   
-  return updateSession(request);
+  // simple middleware - currently, only run for /admin routes; rest of site is public.
+  const {pathname} = request.nextUrl;
+
+  // Protect admin routes
+  if (pathname.startsWith('/admin')) {
+    console.log('Middleware admin route detected');
+    return await updateSession(request);
+  }
   
 } 
 
