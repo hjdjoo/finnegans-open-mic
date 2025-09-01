@@ -13,13 +13,13 @@ export default function ContactPage() {
               <div>
                 <h2 className="text-xl font-semibold mb-2">Email</h2>
                 <p className="text-gray-400 mb-2">
-                  For booking inquiries, questions, or feedback:
+                  For inquiries, questions, or feedback:
                 </p>
                 <a
                   href="mailto:openmic@example.com"
                   className="text-irish-gold hover:text-irish-gold-light transition-colors"
                 >
-                  openmic@example.com
+                  finnegansopenmic@gmail.com
                 </a>
               </div>
             </div>
@@ -31,13 +31,13 @@ export default function ContactPage() {
               <div>
                 <h2 className="text-xl font-semibold mb-2">Phone</h2>
                 <p className="text-gray-400 mb-2">
-                  Call the pub during business hours:
+                  Or call the pub during business hours:
                 </p>
                 <a
                   href="tel:+1234567890"
                   className="text-irish-gold hover:text-irish-gold-light transition-colors"
                 >
-                  (123) 456-7890
+                  (201) 217-1512
                 </a>
               </div>
             </div>
@@ -51,7 +51,7 @@ export default function ContactPage() {
                 <p className="text-gray-400">
                   Every Sunday<br />
                   Sign-ups: 7:00 PM<br />
-                  Performances: 7:30 PM - 10:30 PM
+                  Performances: 7:30 PM - Close
                 </p>
               </div>
             </div>

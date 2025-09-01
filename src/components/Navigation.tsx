@@ -11,8 +11,8 @@ const DEV = process.env.NODE_ENV === "development"
 
 const navLinks = [
   { name: 'Home', href: '/' },
-  { name: 'Past Mics', href: '/past' },
   { name: 'About', href: '/about' },
+  { name: 'Past Mics', href: '/past' },
   { name: 'The Notebook', href: '/notebook' },
   { name: 'Contact', href: '/contact' },
   { name: 'Directions', href: '/directions' },
@@ -45,10 +45,10 @@ export default function Navigation() {
       )}
     >
       <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-24">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-3 group">
-            <div className="relative w-12 h-12 transition-transform duration-200 group-hover:scale-110">
+          <Link href="/" className="flex items-center mx-1 group">
+            <div className="relative w-20 h-20 transition-transform duration-200 group-hover:scale-110">
               <Image
                 src="logo.svg"
                 alt="Open Mic Logo"
@@ -56,11 +56,12 @@ export default function Navigation() {
                 className="object-contain"
               />
             </div>
-            <span className="text-xl font-bold text-irish-gold group-hover:text-irish-gold-light transition-colors">
-              {`Open Mic at Finnegan's Pub`}
+            <span className="text-xl font-serif font-bold font-stretch-condensed text-gray-300 group-hover:text-irish-gold-light transition-transform duration-200">
+              <span className="text-2xl">{`F`}</span><span className="text-xl">{`INNEGAN'S `}</span>
+              <span className="text-2xl">{`O`}</span><span className="text-xl">{`PEN `}</span>
+              <span className="text-2xl">{`M`}</span><span className="text-xl">{`IC`}</span>
             </span>
           </Link>
-
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {navLinks.map((link) => (

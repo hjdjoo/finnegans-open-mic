@@ -45,10 +45,13 @@ export default function ImageUploader() {
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       handleFiles(e.dataTransfer.files)
     }
+
   }, [])
 
   const handleFiles = async (files: FileList) => {
     const newImages: UploadedImage[] = []
+
+    console.log("handleFiles/files: ", files);
 
     for (let i = 0; i < files.length; i++) {
       const file = files[i]
@@ -238,7 +241,7 @@ export default function ImageUploader() {
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {images.map((image) => (
-              <div key={image.id} className="relative group">
+              <div key={image.id} className="relative group h-32">
                 <Image
                   src={image.preview}
                   alt="Preview"

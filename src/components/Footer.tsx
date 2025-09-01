@@ -18,10 +18,10 @@ export default function Footer() {
               Questions about the open mic? Want to perform? Get in touch!
             </p>
             <a
-              href="mailto:openmic@example.com"
+              href="mailto:finnegansopenmic@gmail.com"
               className="text-irish-gold hover:text-irish-gold-light transition-colors"
             >
-              openmic@example.com
+              finnegansopenmic@gmail.com
             </a>
           </div>
 

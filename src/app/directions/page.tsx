@@ -1,3 +1,6 @@
+
+const MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+
 export default function DirectionsPage() {
   return (
     <div className="min-h-screen pt-24 pb-12">
@@ -5,7 +8,7 @@ export default function DirectionsPage() {
         <h1 className="text-3xl md:text-4xl font-bold mb-8">Getting Here</h1>
 
         <div className="grid gap-6">
-          <div className="card flex items-center">
+          <div className="card flex items-center justify-between">
             <div>
               <h2 className="text-xl font-semibold text-irish-gold mb-4">Address</h2>
               <p className="text-gray-300">
@@ -18,24 +21,34 @@ export default function DirectionsPage() {
               </p>
             </div>
             <div>
+              <iframe
+                width="450"
+                height="300"
+                style={{ border: 0 }}
+                loading="lazy"
+                allowFullScreen
+                referrerPolicy="no-referrer-when-downgrade"
+                src={`https://www.google.com/maps/embed/v1/place?key=${MAPS_API_KEY}&q=734+Willow+Ave,Hoboken+NJ`}>
+              </iframe>
+            </div>
+            <div>
 
             </div>
           </div>
           <div className="card">
             <h2 className="text-xl font-semibold text-irish-gold mb-4">Parking</h2>
-            <p className="text-gray-400 mb-3">
-              {`Street parking is available on Main Street and surrounding blocks. 
-              There's also a public parking garage nearby at 371 4th St,
-              about a 10-minute walk from the pub.`}
+            <p className="text-gray-400 mb-2">
+              {`Street parking is available on the surrounding blocks. Bus stops on Clinton St are not active on Sundays, which may be an option.`}
             </p>
-            <p className="text-sm text-gray-500">
-              {`Note: Street Parking is free on Sundays.`}
+            <p className="text-gray-400 mb-2">
+              {`If surrounding blocks are full, parking on Washington Ave and walking ~5 min to the pub may be the best option.`}
             </p>
-          </div>
-
-          <div className="card bg-irish-green/10 border-irish-green/30">
-            <h2 className="text-xl font-semibold text-irish-gold mb-4">Landmark</h2>
-
+            <p className="text-gray-400 mb-2">
+              {`There are also parking garages in the area.`}
+            </p>
+            <p className="text-sm text-gray-400">
+              {`Note: Make sure you park on the side of the street without the solid green "residents only" signs.`}
+            </p>
           </div>
         </div>
       </div>
