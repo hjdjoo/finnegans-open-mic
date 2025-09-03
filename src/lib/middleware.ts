@@ -6,47 +6,27 @@ import { Database } from './database.types';
 
 function createMiddlewareClient(request: NextRequest, response: NextResponse) {
 
+  let supabaseResponse = NextResponse.next({request})
+
+  // createServerClient is being flagged as deprecated, but this is likely picking up the "@deprecated" flag in the block comment regarding the get/set methods.
   return createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
     {
       cookies: {
-        get(name: string) {
-          return request.cookies.get(name)?.value;
-        },
-        set(name: string, value: string, options: CookieOptions) {
-          request.cookies.set({
-            name,
-            value,
-            ...options,
+        getAll() {
+          return request.cookies.getAll()
+        },        
+        setAll(cookiesToSet) {          
+          cookiesToSet.forEach(({ name, value }) => {
+            request.cookies.set(name, value)
           });
-          response = NextResponse.next({
-            request: {
-              headers: request.headers,
-            },
+          supabaseResponse = NextResponse.next({
+            request,
           });
-          response.cookies.set({
-            name,
-            value,
-            ...options,
-          });
-        },
-        remove(name: string, options: CookieOptions) {
-          request.cookies.set({
-            name,
-            value: '',
-            ...options,
-          });
-          response = NextResponse.next({
-            request: {
-              headers: request.headers,
-            },
-          });
-          response.cookies.set({
-            name,
-            value: '',
-            ...options,
-          });
+          cookiesToSet.forEach(({ name, value, options }) => {
+            supabaseResponse.cookies.set(name, value, options)
+          })
         },
       },
       cookieOptions: SUPABASE_COOKIE_OPTIONS,
@@ -57,23 +37,19 @@ function createMiddlewareClient(request: NextRequest, response: NextResponse) {
 }
 
 /**
- * Session refresh from cookies, no DB call - user verification recommended at page level
+ * Session refresh using getUser(); makes DB call to verify user.
  */
 export async function updateSession(request: NextRequest) {
 
   const response = NextResponse.next({
-    request: {
-      headers: request.headers,
-    },
+    request
   });
 
   const supabase = createMiddlewareClient(request, response);
 
-  // const {data: { session }, error } = await supabase.auth.getSession();
-
   const {data: {user}, error } = await supabase.auth.getUser();
 
-  console.log("lib/middleware.ts/user: ", user);
+  // console.log("lib/middleware.ts/user: ", user);
   
   if (error || !user) {
     // if no session, redirect to login

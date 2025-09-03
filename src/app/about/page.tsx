@@ -1,7 +1,7 @@
 export default function AboutPage() {
 
   return (
-    <div className="min-h-screen pt-24 pb-12">
+    <div className="min-h-screen pt-28 pb-12">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
         <h1 className="text-3xl md:text-4xl text-gray-200 font-bold mb-8">About Our Open Mic</h1>
         <div className="prose prose-invert prose-lg max-w-none">

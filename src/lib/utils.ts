@@ -9,7 +9,15 @@ export function formatDate(date: Date | string): string {
   }).replace(/\//g, '-')
 }
 
-export function getSundayDate(date: Date): Date {
+export function getPrevSundayDate(date: Date): Date {
+  const d = new Date(date);
+  const day = d.getDay();
+  d.setDate(d.getDate() - day);
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+
+export function getNextSundayDate(date: Date): Date {
   const d = new Date(date)
   const day = d.getDay()
   const diff = day === 0 ? 0 : 7 - day

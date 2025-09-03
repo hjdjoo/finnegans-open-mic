@@ -1,24 +1,24 @@
 // import { Suspense } from 'react'
 import Gallery from '@/components/Gallery'
 import WelcomeCard from '@/components/WelcomeCard'
-import StatusCard from '@/components/StatusCard'
+import StatusBar from '@/components/StatusBar'
 import createClient from '@/lib/clientSupabase'
 // import { getLastSunday } from '@/lib/utils'
 import Image from 'next/image'
 
 import { Json } from '@/lib/database.types';
 import type { WelcomeText, OpenMicStatus } from '@/lib/types'
+import clsx from 'clsx'
 
-async function getLatestGalleryImages() {
+export async function getLatestGalleryImages() {
   const supabase = createClient();
 
   const { data, error } = await supabase
     .from('images')
     .select('*')
-  // .eq('type', 'open-mic')
-  // .eq('date', dateString)
-  // .order('order_index', { ascending: true })
-  // .limit(10)
+    .eq('type', 'open-mic')
+    .order('order_index', { ascending: true })
+    .limit(10)
 
   if (error) {
     console.error('Error fetching gallery images:', error)
@@ -31,7 +31,7 @@ async function getLatestGalleryImages() {
 async function getSiteSettings() {
   const supabase = createClient();
 
-  // const supabase = await createClient()r
+  // const supabase = await createClient()
 
   const { data, error } = await supabase
     .from('site_settings')
@@ -57,7 +57,7 @@ async function getSiteSettings() {
   return {
     openMicStatus: (settings?.open_mic_status || { active: true, next_date: null, message: '' }) as OpenMicStatus,
     welcomeText: (settings?.welcome_text || {
-      title: 'Welcome to Open Mic Night',
+      title: 'Welcome to the Open Mic Night at Finnegan\'s',
       description: `Every Sunday at Finnegan's, Hoboken NJ`
     }) as WelcomeText
   }
@@ -70,23 +70,36 @@ export default async function HomePage() {
   ])
 
   // Convert images to Gallery slides format
-  const slides = images.map((img, index) => ({
-    id: img.id,
-    content: (
-      <Image
-        src={img.url}
-        alt={img.caption || `Open Mic ${index + 1}`}
-        fill
-        className="w-full h-full object-cover"
-      />
-    ),
-    backgroundImage: img.url,
-  }))
+  const slides = images.map((img, idx) => {
+    const slidePriority = idx === 0 ? "priority" : ""
+    return {
+      id: img.id,
+      content: (
+        <Image
+          src={img.url}
+          alt={img.caption || `Open Mic ${idx + 1}`}
+          fill
+          className={clsx("w-full h-full object-cover", slidePriority)}
+        />
+      ),
+    }
+  }
+  )
 
   return (
     <div className="min-h-screen">
+      {/* Status Section */}
+      <section className="relative container mx-auto sm:px-6 lg:px-8 pt-20 bg-gradient-to-b from-dark-bg/90 via-transparent to-dark-bg/50">
+        <StatusBar status={settings.openMicStatus} />
+      </section>
       {/* Hero Section with Gallery Banner */}
       <section className="relative h-screen">
+        <div className="absolute z-10 inset-0 bg-gradient-to-b from-dark-bg/50 via-transparent to-dark-bg/90">
+          <WelcomeCard
+            title={settings.welcomeText.title}
+            description={settings.welcomeText.description}
+          />
+        </div>
         {slides.length > 0 ? (
           <>
             <Gallery
@@ -96,25 +109,12 @@ export default async function HomePage() {
               showArrows={true}
               showIndicators={true}
               pauseOnHover={true}
-              className="absolute inset-0"
               aspectRatio="auto"
               arrowPosition="inside"
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-dark-bg/50 via-transparent to-dark-bg/90">
-              <WelcomeCard
-                title={settings.welcomeText.title}
-                description={settings.welcomeText.description}
-              />
-            </div>
           </>
         ) : (
-          <div className="h-full flex items-center justify-center bg-dark-surface">
-            <div className="absolute inset-0 bg-gradient-to-b from-dark-bg/50 via-transparent to-dark-bg/90">
-              <WelcomeCard
-                title={settings.welcomeText.title}
-                description={settings.welcomeText.description}
-              />
-            </div>
+          <div className="h-full z-0 flex items-center justify-center bg-dark-surface">
             <div className="text-center">
               <h1 className="text-4xl font-bold text-irish-gold mb-4">
                 Open Mic Night
@@ -123,11 +123,6 @@ export default async function HomePage() {
             </div>
           </div>
         )}
-      </section>
-
-      {/* Status Section */}
-      <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <StatusCard status={settings.openMicStatus} />
       </section>
     </div>
   )

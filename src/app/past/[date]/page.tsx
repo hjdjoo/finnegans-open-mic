@@ -71,6 +71,7 @@ export default async function PastMicPage({ params }: PageProps) {
       <Image
         key={`${img.id}-${index + 1}`}
         src={img.url}
+        fill
         alt={img.caption || `Open Mic ${index + 1}`}
         className="w-full h-full object-contain bg-dark-bg"
       />

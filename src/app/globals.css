@@ -1,6 +1,6 @@
 
 @import "tailwindcss";
-@tailwind components;
+/* @tailwind components; */
 @tailwind utilities;
 
 /* Define custom theme values using @theme directive */

@@ -8,8 +8,6 @@ import clsx from 'clsx'
 export interface GallerySlide {
   id: string
   content: React.ReactNode
-  backgroundImage?: string
-  backgroundColor?: string
 }
 
 interface GalleryProps {
@@ -36,10 +34,9 @@ export default function Gallery({
   pauseOnHover = true,
   transitionDuration = 500,
   className = '',
-  slideClassName = '',
   arrowPosition = 'inside',
   indicatorPosition = 'bottom',
-  aspectRatio = 'video'
+  aspectRatio = 'auto'
 }: GalleryProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
@@ -58,14 +55,11 @@ export default function Gallery({
   // Go to specific slide
   const goToSlide = useCallback((index: number, isManual: boolean = false) => {
     if (isTransitioning || slides.length <= 1) return
-
     if (isManual) {
       lastManualChangeRef.current = Date.now()
     }
-
     setIsTransitioning(true)
     setCurrentIndex(index)
-
     setTimeout(() => {
       setIsTransitioning(false)
     }, transitionDuration)
@@ -151,8 +145,8 @@ export default function Gallery({
   if (slides.length === 0) return null
 
   return (
-    <div
-      className={clsx('relative group', className)}
+    <div id="gallery"
+      className={clsx('relative group h-full w-full', className)}
       onMouseEnter={() => pauseOnHover && setIsPaused(true)}
       onMouseLeave={() => pauseOnHover && setIsPaused(false)}
       onTouchStart={handleTouchStart}
@@ -160,37 +154,26 @@ export default function Gallery({
       onTouchEnd={handleTouchEnd}
     >
       {/* Slides Container */}
-      <div className={clsx(
-        'relative overflow-hidden rounded-lg',
+      <div id="slides" className={clsx(
+        'relative overflow-hidden w-full h-full rounded-lg',
         aspectRatioClasses[aspectRatio]
       )}>
-        {slides.map((slide, index) => (
-          <Transition
-            key={slide.id}
-            show={currentIndex === index}
-            enter="transition-opacity duration-500"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="transition-opacity duration-500"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-          >
-            <div
-              className={clsx(
-                'absolute inset-0 w-full h-full',
-                slideClassName
-              )}
-              style={{
-                backgroundImage: slide.backgroundImage ? `url(${slide.backgroundImage})` : undefined,
-                backgroundColor: slide.backgroundColor,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center'
-              }}
+        {slides.map((slide, index) => {
+          return (
+            <Transition
+              key={slide.id}
+              show={currentIndex === index}
+              enter="transition-opacity duration-500"
+              enterFrom="opacity-0"
+              enterTo="opacity-100"
+              leave="transition-opacity duration-500"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0"
             >
               {slide.content}
-            </div>
-          </Transition>
-        ))}
+            </Transition>
+          )
+        })}
       </div>
 
       {/* Navigation Arrows */}

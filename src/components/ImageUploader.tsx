@@ -3,12 +3,13 @@
 import { useState, useCallback } from 'react'
 import { CloudArrowUpIcon, CheckCircleIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import createClient from '@/lib/clientSupabase'
-import { compressImage, generateStoragePath, getSundayDate } from '@/lib/utils'
+import { compressImage, generateStoragePath, getPrevSundayDate, getNextSundayDate } from '@/lib/utils'
 import clsx from 'clsx'
 import Image from 'next/image'
 
-interface UploadedImage {
+interface ImageForUpload {
   id: string
+  date: Date
   file: File
   preview: string
   type: 'open-mic' | 'notebook'
@@ -21,11 +22,14 @@ export default function ImageUploader() {
 
   const supabase = createClient();
 
-  const [selectedDate, setSelectedDate] = useState<Date>(getSundayDate(new Date()))
-  const [images, setImages] = useState<UploadedImage[]>([])
+  const [selectedDate, setSelectedDate] = useState<Date>(getNextSundayDate(new Date()))
+  const [images, setImages] = useState<ImageForUpload[]>([])
   const [imageType, setImageType] = useState<'open-mic' | 'notebook'>('open-mic')
   const [uploading, setUploading] = useState(false)
   const [dragActive, setDragActive] = useState(false)
+  const [previewLoading, setPreviewLoading] = useState(false);
+  /* To implement: checkbox "use selected date" to coerce images to be uploaded to a particular date */
+  // const [useSelectedDate, setUseSelectedDate] = useState(false);
 
   const handleDrag = useCallback((e: React.DragEvent) => {
     e.preventDefault()
@@ -37,39 +41,42 @@ export default function ImageUploader() {
     }
   }, [])
 
-  const handleDrop = useCallback((e: React.DragEvent) => {
+  const handleDrop = (e: React.DragEvent) => {
     e.preventDefault()
     e.stopPropagation()
     setDragActive(false)
 
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      setPreviewLoading(true);
       handleFiles(e.dataTransfer.files)
     }
 
-  }, [])
+  }
 
   const handleFiles = async (files: FileList) => {
-    const newImages: UploadedImage[] = []
-
-    console.log("handleFiles/files: ", files);
+    const newImages: ImageForUpload[] = []
 
     for (let i = 0; i < files.length; i++) {
       const file = files[i]
       if (file.type.startsWith('image/')) {
+
         const compressedFile = await compressImage(file)
         const preview = URL.createObjectURL(compressedFile)
         newImages.push({
           id: `${Date.now()}-${i}`,
           file: compressedFile,
+          date: getPrevSundayDate(new Date(file.lastModified)),
           preview,
           type: imageType,
           uploading: false,
           uploaded: false,
         })
+        console.log(newImages);
       }
     }
 
-    setImages(prev => [...prev, ...newImages])
+    setImages(prev => [...prev, ...newImages]);
+    setPreviewLoading(false);
   }
 
   const removeImage = (id: string) => {
@@ -86,8 +93,8 @@ export default function ImageUploader() {
     if (images.length === 0) return
 
     setUploading(true)
-    const sundayDate = getSundayDate(selectedDate)
-    const dateString = sundayDate.toISOString().split('T')[0]
+    const selectedSundayDate = getNextSundayDate(selectedDate);
+    const dateString = selectedSundayDate.toISOString().split('T')[0]
 
     for (const image of images) {
       if (image.uploaded) continue
@@ -96,11 +103,19 @@ export default function ImageUploader() {
         img.id === image.id ? { ...img, uploading: true } : img
       ))
 
+      const imageDateString = image.date.toISOString().split('T')[0]
+
       try {
         // Upload to storage
-        const storagePath = generateStoragePath(image.type, sundayDate, image.file.name)
+        // const imageDate = image.date
+        const storagePath = generateStoragePath(
+          image.type,
+          image.type === 'open-mic' ?
+            image.date : selectedSundayDate,
+          image.file.name)
         const { error: uploadError } = await supabase.storage
-          .from(image.type === 'open-mic' ? 'open-mic-images' : 'notebook-images')
+          .from(image.type === 'open-mic' ?
+            'open-mic-images' : 'notebook-images')
           .upload(storagePath, image.file)
 
         if (uploadError) throw uploadError
@@ -116,7 +131,7 @@ export default function ImageUploader() {
           .insert({
             url: publicUrl,
             type: image.type,
-            date: dateString,
+            date: imageDateString ?? dateString,
             order_index: images.indexOf(image),
           })
 
@@ -126,7 +141,8 @@ export default function ImageUploader() {
           img.id === image.id
             ? { ...img, uploading: false, uploaded: true }
             : img
-        ))
+        ));
+
       } catch (error) {
         console.error('Upload error:', error)
         setImages(prev => prev.map(img =>
@@ -140,8 +156,8 @@ export default function ImageUploader() {
     setUploading(false)
   }
 
-  const sundayDate = getSundayDate(selectedDate)
-  const dateString = sundayDate.toLocaleDateString('en-US', {
+  const selectedSundayDate = getNextSundayDate(selectedDate)
+  const dateString = selectedSundayDate.toLocaleDateString('en-US', {
     month: 'long',
     day: 'numeric',
     year: 'numeric',
@@ -150,7 +166,6 @@ export default function ImageUploader() {
   return (
     <div className="card">
       <h2 className="text-xl font-bold mb-6">Upload Images</h2>
-
       {/* Date Picker */}
       <div className="mb-6">
         <label className="block text-sm font-medium text-gray-400 mb-2">
@@ -216,7 +231,10 @@ export default function ImageUploader() {
           id="file-upload"
           multiple
           accept="image/*"
-          onChange={(e) => e.target.files && handleFiles(e.target.files)}
+          onChange={(e) => {
+            setPreviewLoading(true);
+            if (e.target.files) handleFiles(e.target.files);
+          }}
           className="hidden"
         />
         <label
@@ -234,57 +252,66 @@ export default function ImageUploader() {
       </div>
 
       {/* Image Preview Grid */}
-      {images.length > 0 && (
-        <div className="mt-8">
-          <h3 className="text-lg font-medium mb-4">
-            {images.length} image{images.length !== 1 ? 's' : ''} selected
-          </h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {images.map((image) => (
-              <div key={image.id} className="relative group h-32">
-                <Image
-                  src={image.preview}
-                  alt="Preview"
-                  fill
-                  className={clsx(
-                    'w-full h-32 object-cover rounded-lg',
-                    image.uploaded && 'opacity-50'
-                  )}
-                />
-                {image.uploading && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-dark-bg/80 rounded-lg">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-irish-gold"></div>
-                  </div>
-                )}
-                {image.uploaded && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-green-900/80 rounded-lg">
-                    <CheckCircleIcon className="h-8 w-8 text-green-400" />
-                  </div>
-                )}
-                {!image.uploaded && !image.uploading && (
-                  <button
-                    onClick={() => removeImage(image.id)}
-                    className="absolute top-2 right-2 p-1 bg-red-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                  >
-                    <XMarkIcon className="h-4 w-4 text-white" />
-                  </button>
-                )}
-                <span className="absolute bottom-2 left-2 text-xs bg-dark-bg/80 px-2 py-1 rounded">
-                  {image.type}
-                </span>
-              </div>
-            ))}
-          </div>
-
-          <button
-            onClick={uploadImages}
-            disabled={uploading || images.every(img => img.uploaded)}
-            className="mt-6 btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {uploading ? 'Uploading...' : `Upload ${images.filter(img => !img.uploaded).length} Images`}
-          </button>
+      {previewLoading &&
+        <div className="h-40 flex space-x-1 items-center justify-center">
+          <div className="size-4 animate-bounce rounded-full bg-gray-600 [animation-delay:-0.3s] dark:bg-orange-400"></div>
+          <div className="size-4 animate-bounce rounded-full bg-gray-600 [animation-delay:-0.15s] dark:bg-orange-400"></div>
+          <div className="size-4 animate-bounce rounded-full bg-gray-600 dark:bg-orange-400"></div>
         </div>
-      )}
-    </div>
+      }
+      {
+        !previewLoading && images.length > 0 && (
+          <div className="mt-8">
+            <h3 className="text-lg font-medium mb-4">
+              {images.length} image{images.length !== 1 ? 's' : ''} selected
+            </h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {images.map((image) => (
+                <div key={image.id} className="relative group h-32">
+                  <Image
+                    src={image.preview}
+                    alt="Preview"
+                    fill
+                    className={clsx(
+                      'w-full h-32 object-cover rounded-lg',
+                      image.uploaded && 'opacity-50'
+                    )}
+                  />
+                  {image.uploading && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-dark-bg/80 rounded-lg">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-irish-gold"></div>
+                    </div>
+                  )}
+                  {image.uploaded && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-green-900/80 rounded-lg">
+                      <CheckCircleIcon className="h-8 w-8 text-green-400" />
+                    </div>
+                  )}
+                  {!image.uploaded && !image.uploading && (
+                    <button
+                      onClick={() => removeImage(image.id)}
+                      className="absolute top-2 right-2 p-1 bg-red-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <XMarkIcon className="h-4 w-4 text-white" />
+                    </button>
+                  )}
+                  <span className="absolute bottom-2 left-2 text-xs bg-dark-bg/80 px-2 py-1 rounded">
+                    {image.type}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            <button
+              onClick={uploadImages}
+              disabled={uploading || images.every(img => img.uploaded)}
+              className="mt-6 btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {uploading ? 'Uploading...' : `Upload ${images.filter(img => !img.uploaded).length} Images`}
+            </button>
+          </div>
+        )
+      }
+    </div >
   )
 }
