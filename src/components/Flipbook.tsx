@@ -1,11 +1,11 @@
 'use client';
 
-// import { useEffect, useRef, useState } from 'react';
-// import { PageFlip } from 'react-pageflip';
 import HTMLFlipBook from 'react-pageflip';
 import Image from 'next/image';
 import { useRef } from 'react';
-import { PageFlip } from "page-flip"
+import { type PageFlip } from "page-flip"
+
+
 
 type FlipbookRef = React.RefObject<typeof HTMLFlipBook | null> & {
   pageFlip: () => PageFlip
