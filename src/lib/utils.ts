@@ -11,9 +11,8 @@ export function formatDate(date: Date | string): string {
 
 export function getPrevSundayDate(date: Date): Date {
   const d = new Date(date);
-  const day = d.getDay();
+  const day = d.getDay(); // 0-6 : Sunday-Sa
   d.setDate(d.getDate() - day);
-  d.setHours(0, 0, 0, 0);
   return d;
 }
 

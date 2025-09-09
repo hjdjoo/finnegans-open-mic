@@ -116,7 +116,9 @@ export default function ImageUploader() {
         const { error: uploadError } = await supabase.storage
           .from(image.type === 'open-mic' ?
             'open-mic-images' : 'notebook-images')
-          .upload(storagePath, image.file)
+          .upload(storagePath, image.file, {
+            upsert: true
+          })
 
         if (uploadError) throw uploadError
 

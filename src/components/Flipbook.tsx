@@ -3,7 +3,7 @@
 import HTMLFlipBook from 'react-pageflip';
 import Image from 'next/image';
 import { useRef } from 'react';
-import { type PageFlip } from "page-flip"
+import type { PageFlip } from "page-flip"
 
 
 
@@ -50,8 +50,8 @@ function FlipbookPage({ page, ref }: FlipbookPageProps) {
 function Flipbook({
   className = "",
   style = {},
-  width = 800,
-  height = 600,
+  width = 600,
+  height = 800,
   children,
   ref
 }
