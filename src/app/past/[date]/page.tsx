@@ -5,10 +5,18 @@ import { ArrowLeftIcon, BookOpenIcon } from '@heroicons/react/24/outline'
 import createClient from '@/lib/clientSupabase'
 import Gallery from '@/components/Gallery'
 
-interface PageProps {
-  params: {
-    date: string
+
+export const revalidate = 60 * 60 // seconds
+
+export async function generateStaticParams() {
+
+  const supabase = createClient();
+
+  const { data, error } = await supabase.rpc("get_distinct_dates");
+  if (error) {
+    throw error;
   }
+  return data.map((date) => ({ date: date }))
 }
 
 async function getGalleryImages(date: string) {
@@ -27,12 +35,12 @@ async function getGalleryImages(date: string) {
     .eq('date', date)
     .order('order_index', { ascending: true })
 
-  const { data: notebookImage, error: notebookError } = await supabase
+  const { data: notebookImages, error: notebookError } = await supabase
     .from('images')
     .select('*')
     .eq('type', 'notebook')
     .eq('date', date)
-    .single()
+    .order('order_index', { ascending: true })
 
   if (openMicError && openMicError.code !== 'PGRST116') {
     console.error('Error fetching images:', openMicError)
@@ -44,19 +52,24 @@ async function getGalleryImages(date: string) {
 
   return {
     openMicImages: openMicImages || [],
-    notebookImage: notebookImage || null,
+    notebookImages: notebookImages || null,
   }
 }
 
-export default async function PastMicPage({ params }: PageProps) {
-  const images = await getGalleryImages(params.date)
+export default async function PastMicPage({ params }: {
+  params: Promise<{ date: string }>
+}) {
 
-  if (!images || (images.openMicImages.length === 0 && !images.notebookImage)) {
+  const { date } = await params;
+
+  const images = await getGalleryImages(date);
+
+  if (!images || (images.openMicImages.length === 0 && !images.notebookImages)) {
     notFound()
   }
 
   // Convert to display date
-  const displayDate = new Date(params.date + 'T00:00:00')
+  const displayDate = new Date(date + 'T00:00:00')
   const dateString = displayDate.toLocaleDateString('en-US', {
     weekday: 'long',
     year: 'numeric',
@@ -112,28 +125,31 @@ export default async function PastMicPage({ params }: PageProps) {
         )}
 
         {/* Notebook Section */}
-        {images.notebookImage && (
-          <div className="mt-16">
-            <div className="flex items-center space-x-3 mb-6">
-              <BookOpenIcon className="h-6 w-6 text-irish-gold" />
-              <h2 className="text-2xl font-bold">The Notebook</h2>
-            </div>
-            <div className="card max-w-4xl mx-auto">
-              <Image
-                src={images.notebookImage.url}
-                width={800}
-                height={600}
-                alt="Notebook page"
-                className="w-full rounded-lg"
-              />
-              {images.notebookImage.caption && (
-                <p className="mt-4 text-center text-gray-400">
-                  {images.notebookImage.caption}
-                </p>
-              )}
-            </div>
+        {
+          images.notebookImages && <div className="flex items-center space-x-3 mb-6">
+            <BookOpenIcon className="h-6 w-6 text-irish-gold" />
+            <h2 className="text-2xl font-bold">The Notebook</h2>
+            {(images.notebookImages.map((image, idx) => (
+              <div key={`${date}-notebook-page-${idx}`}
+                className="mt-16">
+                <div className="card max-w-4xl mx-auto">
+                  <Image
+                    src={image.url}
+                    width={800}
+                    height={600}
+                    alt="Notebook page"
+                    className="w-full rounded-lg"
+                  />
+                  {image.caption && (
+                    <p className="mt-4 text-center text-gray-400">
+                      {image.caption}
+                    </p>
+                  )}
+                </div>
+              </div>
+            )))}
           </div>
-        )}
+        }
       </div>
     </div>
   )

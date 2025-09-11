@@ -1,7 +1,10 @@
 import { BookOpenIcon } from '@heroicons/react/24/outline'
 import createClient from '@/lib/clientSupabase'
-import Image from 'next/image'
 import FlipbookGallery from "@/components/Flipbook"
+import { Tables } from '@/lib/database.types';
+import { FlipbookPage } from '@/components/Flipbook';
+
+type ImageData = Tables<"images">
 
 async function getNotebookImages() {
 
@@ -10,8 +13,8 @@ async function getNotebookImages() {
   const { data, error } = await supabase
     .from('images')
     .select('*')
-    .eq('type', 'notebook')
-    .order('date', { ascending: false })
+    .in('type', ['notebook', 'notebook-front', 'notebook-back'])
+    .order('date', { ascending: true })
 
   if (error) {
     console.error('Error fetching notebook images:', error)
@@ -21,8 +24,39 @@ async function getNotebookImages() {
   return data || []
 }
 
+
 export default async function NotebookPage() {
-  const notebookImages = await getNotebookImages()
+  const notebookImages = await getNotebookImages();
+  const pages: FlipbookPage[] = [];
+  let backCover: FlipbookPage | undefined = undefined
+
+  notebookImages.forEach((image) => {
+    if (image.type === 'notebook-front') {
+      pages.unshift({
+        id: image.id,
+        imageUrl: image.url,
+        date: image.date
+      })
+    }
+    if (image.type === 'notebook-back') {
+      backCover = {
+        id: image.id,
+        imageUrl: image.url,
+        date: image.date
+      }
+    }
+    if (image.type === 'notebook') {
+      pages.push({
+        id: image.id,
+        imageUrl: image.url,
+        date: image.date,
+      })
+    }
+  })
+
+  if (backCover) {
+    pages.push(backCover);
+  }
 
   return (
     <div className="min-h-screen pt-24 pb-12">
@@ -41,16 +75,19 @@ export default async function NotebookPage() {
             <p className="text-gray-400">No notebook pages available yet.</p>
           </div>
         ) : (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            FlipbookGallery
+          <div className="container">
+            <FlipbookGallery
+              pages={pages}
+            />
+
           </div>
         )}
 
         <div className="mt-12 text-center text-gray-500">
           <p className="text-sm">
-            Each week, performers and audience members contribute to our community notebook.
+            Each week, performers and audience members contribute to our notebook.
             <br />
-            These pages capture the spirit and creativity of our open mic nights.
+            The names and doodles lovingly capture the unhinged chaos of our community.
           </p>
         </div>
       </div>

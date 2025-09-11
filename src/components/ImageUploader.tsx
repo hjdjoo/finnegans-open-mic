@@ -3,7 +3,7 @@
 import { useState, useCallback } from 'react'
 import { CloudArrowUpIcon, CheckCircleIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import createClient from '@/lib/clientSupabase'
-import { compressImage, generateStoragePath, getPrevSundayDate, getNextSundayDate } from '@/lib/utils'
+import { compressImage, generateStoragePath, getPrevSundayDate, getNextSundayDate, formatDate } from '@/lib/utils'
 import clsx from 'clsx'
 import Image from 'next/image'
 
@@ -12,7 +12,7 @@ interface ImageForUpload {
   date: Date
   file: File
   preview: string
-  type: 'open-mic' | 'notebook'
+  type: 'open-mic' | 'notebook' | 'notebook-front' | 'notebook-back'
   uploading: boolean
   uploaded: boolean
   error?: string
@@ -24,7 +24,7 @@ export default function ImageUploader() {
 
   const [selectedDate, setSelectedDate] = useState<Date>(getNextSundayDate(new Date()))
   const [images, setImages] = useState<ImageForUpload[]>([])
-  const [imageType, setImageType] = useState<'open-mic' | 'notebook'>('open-mic')
+  const [imageType, setImageType] = useState<ImageForUpload['type']>('open-mic')
   const [uploading, setUploading] = useState(false)
   const [dragActive, setDragActive] = useState(false)
   const [previewLoading, setPreviewLoading] = useState(false);
@@ -54,24 +54,29 @@ export default function ImageUploader() {
   }
 
   const handleFiles = async (files: FileList) => {
+
     const newImages: ImageForUpload[] = []
 
     for (let i = 0; i < files.length; i++) {
       const file = files[i]
       if (file.type.startsWith('image/')) {
 
+        const sundayDate = getPrevSundayDate(new Date(file.lastModified));
+        console.log("imageUploader/handleFiles/sundayDate: ", sundayDate);
+
+        const sundayStr = formatDate(sundayDate);
         const compressedFile = await compressImage(file)
         const preview = URL.createObjectURL(compressedFile)
         newImages.push({
-          id: `${Date.now()}-${i}`,
+          id: `${sundayStr}-${i}-${files[i].name}`,
           file: compressedFile,
-          date: getPrevSundayDate(new Date(file.lastModified)),
+          date: sundayDate,
           preview,
           type: imageType,
           uploading: false,
           uploaded: false,
         })
-        console.log(newImages);
+
       }
     }
 
@@ -96,6 +101,9 @@ export default function ImageUploader() {
     const selectedSundayDate = getNextSundayDate(selectedDate);
     const dateString = selectedSundayDate.toISOString().split('T')[0]
 
+    let currSunDate: string = '';
+    let orderIdx: number = 0;
+
     for (const image of images) {
       if (image.uploaded) continue
 
@@ -103,14 +111,18 @@ export default function ImageUploader() {
         img.id === image.id ? { ...img, uploading: true } : img
       ))
 
-      const imageDateString = image.date.toISOString().split('T')[0]
+      const imageDateString = image.date.toISOString().split('T')[0];
 
       try {
+        if (currSunDate !== imageDateString) {
+          currSunDate = imageDateString;
+          orderIdx = 0;
+        }
         // Upload to storage
         // const imageDate = image.date
         const storagePath = generateStoragePath(
-          image.type,
-          image.type === 'open-mic' ?
+          imageType,
+          imageType === 'open-mic' ?
             image.date : selectedSundayDate,
           image.file.name)
         const { error: uploadError } = await supabase.storage
@@ -120,7 +132,10 @@ export default function ImageUploader() {
             upsert: true
           })
 
-        if (uploadError) throw uploadError
+        if (uploadError) {
+          console.log("Couldn't upload file to db. Check logs.")
+          throw uploadError
+        }
 
         // Get public URL
         const { data: { publicUrl } } = supabase.storage
@@ -131,14 +146,16 @@ export default function ImageUploader() {
         const { error: dbError } = await supabase
           .from('images')
           .insert({
+            id: `${imageDateString}-${orderIdx}-${image.file.name}`,
             url: publicUrl,
             type: image.type,
             date: imageDateString ?? dateString,
-            order_index: images.indexOf(image),
+            order_index: orderIdx,
           })
 
         if (dbError) throw dbError
 
+        orderIdx++;
         setImages(prev => prev.map(img =>
           img.id === image.id
             ? { ...img, uploading: false, uploaded: true }
@@ -211,6 +228,28 @@ export default function ImageUploader() {
             )}
           >
             Notebook Page
+          </button>
+          <button
+            onClick={() => setImageType('notebook-front')}
+            className={clsx(
+              'px-4 py-2 rounded-lg font-medium transition-all',
+              imageType === 'notebook-front'
+                ? 'bg-irish-green text-white'
+                : 'bg-dark-bg border border-dark-border text-gray-400 hover:border-irish-green'
+            )}
+          >
+            Notebook Front
+          </button>
+          <button
+            onClick={() => setImageType('notebook-back')}
+            className={clsx(
+              'px-4 py-2 rounded-lg font-medium transition-all',
+              imageType === 'notebook-back'
+                ? 'bg-irish-green text-white'
+                : 'bg-dark-bg border border-dark-border text-gray-400 hover:border-irish-green'
+            )}
+          >
+            Notebook Back
           </button>
         </div>
       </div>

@@ -54,7 +54,7 @@ export async function compressImage(file: File): Promise<File> {
   }
 }
 
-export function generateStoragePath(type: 'open-mic' | 'notebook', date: Date, fileName: string): string {
+export function generateStoragePath(type: 'open-mic' | 'notebook' | 'notebook-front' | 'notebook-back', date: Date, fileName: string): string {
   const year = date.getFullYear()
   const month = String(date.getMonth() + 1).padStart(2, '0')
   const day = String(date.getDate()).padStart(2, '0')

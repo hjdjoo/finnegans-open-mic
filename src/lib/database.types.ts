@@ -14,6 +14,24 @@ export type Database = {
   }
   public: {
     Tables: {
+      debug_log: {
+        Row: {
+          created_at: string | null
+          id: number
+          message: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: number
+          message?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: number
+          message?: string | null
+        }
+        Relationships: []
+      }
       images: {
         Row: {
           caption: string | null
@@ -97,7 +115,38 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      can_read_profile: {
+        Args: { profile_uid: string; user_id: string }
+        Returns: boolean
+      }
+      get_distinct_dates: {
+        Args: Record<PropertyKey, never>
+        Returns: string[]
+      }
+      get_user_claims: {
+        Args: { target_user_id: string }
+        Returns: Json
+      }
+      is_admin: {
+        Args: { user_id: string }
+        Returns: boolean
+      }
+      make_user_admin: {
+        Args: { target_user_id: string }
+        Returns: Json
+      }
+      revoke_admin: {
+        Args: { target_user_id: string }
+        Returns: Json
+      }
+      set_user_claims: {
+        Args: { claims: Json; target_user_id: string }
+        Returns: Json
+      }
+      set_user_role: {
+        Args: { role_name: string; target_user_id: string }
+        Returns: Json
+      }
     }
     Enums: {
       [_ in never]: never

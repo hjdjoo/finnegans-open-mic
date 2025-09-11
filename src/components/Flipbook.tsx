@@ -11,7 +11,7 @@ type FlipbookRef = React.RefObject<typeof HTMLFlipBook | null> & {
   pageFlip: () => PageFlip
 }
 
-interface FlipbookPage {
+export interface FlipbookPage {
   id: string;
   imageUrl: string;
   date: string;
@@ -66,7 +66,7 @@ function Flipbook({
       style={style}
       width={width}
       height={height}
-      size="fixed"
+      size="stretch"
       drawShadow={true}
       minWidth={300}
       maxWidth={1000}
@@ -74,7 +74,7 @@ function Flipbook({
       maxHeight={1200}
       showCover={true}
       flippingTime={1000}
-      usePortrait={false}
+      usePortrait={true}
       startZIndex={0}
       autoSize={true}
       maxShadowOpacity={0.5}
@@ -109,11 +109,14 @@ export default function FlipbookGallery({ pages }: FlipbookGalleryProps) {
         ref={flipbook}>
         {FlipbookPages}
       </Flipbook>
-      <button onClick={() => {
-        flipbook.current?.pageFlip().flipNext()
-      }}>
-        Next
-      </button>
+      <div className="container flex justify-between my-3">
+        <button className="py-2 px-3 transition-all bg-gray-500 hover:cursor-pointer hover:bg-gray-700" onClick={() => {
+          flipbook.current?.pageFlip().flipPrev()
+        }}>{`<< Prev`}</button>
+        <button className="py-2 px-3 transition-all bg-gray-500 hover:cursor-pointer hover:bg-gray-700" onClick={() => {
+          flipbook.current?.pageFlip().flipNext()
+        }}>{`Next >>`}</button>
+      </div>
     </>
   )
 }

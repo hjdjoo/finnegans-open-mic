@@ -8,6 +8,8 @@ type PastMicData = {
   hasNotebook: boolean
 }
 
+export const revalidate = 60 * 60;
+
 async function getPastMics() {
 
   const supabase = createClient();
@@ -68,7 +70,9 @@ export default async function PastMicsPage() {
           </div>
         ) : (
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {pastMics.map((mic) => {
+            {pastMics.filter((mic) => {
+              return mic.openMicCount > 0
+            }).map((mic) => {
               const date = new Date(mic.date + 'T00:00:00')
               const dateString = date.toLocaleDateString('en-US', {
                 weekday: 'long',
