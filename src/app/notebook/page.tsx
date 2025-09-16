@@ -2,7 +2,7 @@ import { BookOpenIcon } from '@heroicons/react/24/outline'
 import createClient from '@/lib/clientSupabase'
 import FlipbookGallery from "@/components/Flipbook"
 import { Tables } from '@/lib/database.types';
-import { FlipbookPage } from '@/components/Flipbook';
+import { type FlipbookPage } from '@/components/Flipbook';
 
 type ImageData = Tables<"images">
 
@@ -79,10 +79,8 @@ export default async function NotebookPage() {
             <FlipbookGallery
               pages={pages}
             />
-
           </div>
         )}
-
         <div className="mt-12 text-center text-gray-500">
           <p className="text-sm">
             Each week, performers and audience members contribute to our notebook.

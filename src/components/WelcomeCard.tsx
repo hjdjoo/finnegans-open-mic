@@ -12,6 +12,47 @@ interface WelcomeCardProps {
 export default function WelcomeCard({ title, description }: WelcomeCardProps) {
   const [isVisible, setIsVisible] = useState(false)
 
+  const titleStart = title.slice(0, title.indexOf("at"))
+  const titleEnd = title.slice(title.indexOf("at") + 2)
+
+  /**
+   * 
+   * @param title string - expect something like "Lorem Ipsum Blah Blah"
+   * @param firstLetSize string - Tailwind class for text sizing: sm, m, lg, 2xl, etc
+   * @returns JSX.Element - With Title Uppercasing.
+   */
+  const TitleUpperCased = (title: string, firstLetSize: string, secondSize: string) => {
+
+    const titleArr = title.split(" ");
+
+    const titleDisplay = titleArr.map((word, idx) => {
+
+      return (
+        <span key={`title-${word}-${idx}`}>
+          <span className={clsx([`text-${firstLetSize}`])}>
+            {word.toLocaleUpperCase()[0]}
+          </span>
+          <span>
+            {`${word.slice(1).toLocaleUpperCase()} `}
+          </span>
+        </span>
+      )
+
+    })
+
+
+
+    return (
+      <>
+        <span className={clsx([`text-${secondSize}`])}>{titleDisplay}</span>
+      </>
+    )
+
+  }
+
+
+
+
   useEffect(() => {
     const timer = setTimeout(() => setIsVisible(true), 500)
     return () => clearTimeout(timer)
@@ -25,9 +66,15 @@ export default function WelcomeCard({ title, description }: WelcomeCardProps) {
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
         )}
       >
-        <h1 className="text-4xl md:text-6xl font-bold mb-4">
-          <span className="text-irish-gold">{title}</span>
+        <h1 className="font-bold font-serif mb-4">
+          <span className="text-irish-gold">{TitleUpperCased(titleStart, "5xl", "4xl")}</span>
         </h1>
+        <h2 className="text-2xl md:text-2xl font-bold font-serif mb-2">
+          <span className="text-gray-300">AT</span>
+        </h2>
+        <h2 className="text-3xl md:text-3xl font-serif font-bold mb-2">
+          <span className="text-irish-gold">{TitleUpperCased(titleEnd, "4xl", "3xl")}</span>
+        </h2>
         <p className="text-lg md:text-xl text-gray-300 leading-relaxed">
           {description}
         </p>

@@ -58,6 +58,7 @@ export default function Navigation() {
             </div>
             <span className="text-xl font-serif font-bold font-stretch-condensed text-gray-300 group-hover:text-irish-gold-light transition-transform duration-200">
               <span className="text-2xl">{`T`}</span><span className="text-lg">{`HE `}</span>
+              <span className="text-2xl">{`M`}</span><span className="text-lg">{`USICIANS' `}</span>
               <span className="text-2xl">{`O`}</span><span className="text-lg">{`PEN `}</span>
               <span className="text-2xl">{`M`}</span><span className="text-lg">{`IC `}</span>
               <span className="text-lg">{`A`}</span><span className="text-lg">{`T`}</span>
