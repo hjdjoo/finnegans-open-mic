@@ -7,7 +7,7 @@ import Footer from '@/components/Footer'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Open Mic Night - Every Sunday',
+  title: "Finnegan's Open Mic - Sundays at 7",
   description: 'Join us every Sunday for open mic night at Finnegan\'s Pub',
 }
 

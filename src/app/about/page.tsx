@@ -6,23 +6,37 @@ export default function AboutPage() {
         <h1 className="text-3xl md:text-4xl text-gray-200 font-bold mb-8">About Our Open Mic</h1>
         <div className="prose prose-invert prose-lg max-w-none">
           <div className="card mb-8">
-            <p className="text-gray-300 leading-relaxed">
+            <p className="text-2xl text-center text-gray-300 leading-relaxed">
               {`Every Sunday night, the back room at Finnegan's becomes a space where musicians come together to hang out, perform, and listen.`}
             </p>
           </div>
           <div className="grid md:grid-cols-2 gap-6 mb-8">
             <div className="card">
               <h2 className="text-xl font-bold text-irish-gold mb-3">For The Performers</h2>
-              <p className="text-gray-400">
-                {`Sign-ups begin around 7PM. The host (Darryl) will start with a few songs to warm up the night, after which performers begin their sets.`}
-              </p>
+              <ul className="space-y-2">
+                <li className="flex items-start text-gray-400">
+                  <span className="inline-block w-2 h-2 bg-irish-gold rounded-full mt-1.5 mr-3 flex-shrink-0"></span>
+                  {`Sign-ups begin around 7PM.`}
+                </li>
+                <li className="flex items-start text-gray-400">
+                  <span className="inline-block w-2 h-2 bg-irish-gold rounded-full mt-1.5 mr-3 flex-shrink-0"></span>
+                  {`The host (Darryl) will start with a few songs to warm up the night, after which performers begin their sets.`}
+                </li>
+              </ul>
             </div>
 
             <div className="card">
               <h2 className="text-xl font-bold text-irish-gold mb-3">For The Audience</h2>
-              <p className="text-gray-400">
-                {`Come take a seat, order a drink, grab some delicious food from the kitchen, and observe your local musicians in their natural environment! Be mindful of your noise levels, performers may spook.`}
-              </p>
+              <ul className="space-y-2">
+                <li className="flex items-start text-gray-400">
+                  <span className="inline-block w-2 h-2 bg-irish-gold rounded-full mt-1.5 mr-3 flex-shrink-0"></span>
+                  {`Come take a seat, order a drink, grab some delicious food from the kitchen, and observe your local musicians in their natural environment!`}
+                </li>
+                < li className="flex items-start text-gray-400">
+                  <span className="inline-block w-2 h-2 bg-irish-gold rounded-full mt-1.5 mr-3 flex-shrink-0"></span>
+                  {` Be mindful of your noise levels, performers may spook.`}
+                </li>
+              </ul>
             </div>
           </div>
 

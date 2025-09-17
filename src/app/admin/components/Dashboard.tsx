@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation'
 import createClient from '@/lib/clientSupabase'
 import ImageUploader from '@/components/ImageUploader'
+import StatusUpdater from "./StatusUpdater"
 import { User } from '@supabase/supabase-js'
 // import Forbidden from '@/components/Forbidden'
 
@@ -41,6 +42,7 @@ export default function AdminDashboard(props: AdminDashboardProps) {
         </div>
 
         <div className="grid gap-8">
+          <StatusUpdater />
           <ImageUploader />
         </div>
       </div>

@@ -41,12 +41,6 @@ interface FlipbookGalleryProps {
   pages: FlipbookPage[]
 }
 
-interface FlipbookDatePickerProps {
-  ref: React.RefObject<FlipbookRef | null>
-  selectedDate: string
-  setSelectedDate: React.Dispatch<SetStateAction<string>>
-  pages: FlipbookPage[]
-}
 
 function FlipbookPage({ page, ref }: FlipbookPageProps) {
   return (
@@ -172,7 +166,6 @@ export default function FlipbookGallery({ className, style, width, height, pages
         ref={flipbook}>
         {FlipbookPages}
       </Flipbook>
-
       <div className="container flex justify-between my-3">
         <button className="py-2 px-3 transition-all backdrop-blur-md rounded-md bg-gray-500/50 hover:cursor-pointer hover:bg-gray-700/50" onClick={() => {
           flipbook.current?.pageFlip().flipPrev()

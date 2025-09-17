@@ -69,13 +69,13 @@ export default function WelcomeCard({ title, description }: WelcomeCardProps) {
         <h1 className="font-bold font-serif mb-4">
           <span className="text-irish-gold">{TitleUpperCased(titleStart, "5xl", "4xl")}</span>
         </h1>
-        <h2 className="text-2xl md:text-2xl font-bold font-serif mb-2">
+        <h2 className="text-2xl md:text-xl font-bold font-serif mb-2">
           <span className="text-gray-300">AT</span>
         </h2>
-        <h2 className="text-3xl md:text-3xl font-serif font-bold mb-2">
+        <h2 className="text-3xl md:text-3xl font-serif font-bold mb-4">
           <span className="text-irish-gold">{TitleUpperCased(titleEnd, "4xl", "3xl")}</span>
         </h2>
-        <p className="text-lg md:text-xl text-gray-300 leading-relaxed">
+        <p className="text-lg md:text-xl text-gray-300 font-serif leading-relaxed">
           {description}
         </p>
         <div className="mt-8 flex items-center justify-center space-x-2">
@@ -93,7 +93,7 @@ export default function WelcomeCard({ title, description }: WelcomeCardProps) {
             <span>Musical sets only</span>
           </p>
           <Link href="/about">
-            <p className="flex items-center space-x-2">
+            <p className="flex items-center italic space-x-2">
               <span>Learn More</span>
             </p>
           </Link>

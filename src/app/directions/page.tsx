@@ -1,3 +1,4 @@
+import Image from "next/image"
 
 const MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
 
@@ -49,6 +50,24 @@ export default function DirectionsPage() {
             <p className="text-sm text-gray-400">
               {`Note: Make sure you park on the side of the street without the solid green "residents only" signs.`}
             </p>
+            <div className="card flex flex-row items-center justify-evenly">
+              <div className="flex flex-col j">
+                <div className="relative grow-1 min-h-[300px] ">
+                  <Image src="/hoboken_parking_yes.jpg" fill objectFit="contain" sizes={"(max-width-200)"} alt="hoboken parking permitted image" />
+                </div>
+                <div>
+                  <p>Parking Permitted</p>
+                </div>
+              </div>
+              <div className="flex flex-col justify-between">
+                <div className="relative grow-1 min-h-[300px] ">
+                  <Image src="/hoboken_parking_no.jpg" fill objectFit="contain" sizes={"(max-width-200)"} alt="hoboken parking NOT permitted image" />
+                </div>
+                <div>
+                  <p>Parking NOT Permitted</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

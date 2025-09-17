@@ -3,10 +3,7 @@
 import createClient from '@/lib/serverSupabase'
 
 import { redirect } from 'next/navigation'
-// import Forbidden from '@/components/Forbidden'
 import AdminDashboard from './components/Dashboard'
-// import { useEffect, useContext } from 'react'
-// import { User } from '@supabase/supabase-js'
 import Spinner from '@/components/Spinner'
 import { checkAdmin } from '@/lib/clientActions'
 
