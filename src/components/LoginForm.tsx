@@ -4,6 +4,8 @@ import { useState } from 'react'
 import createClient from '@/lib/clientSupabase'
 import Spinner from './Spinner';
 
+const IS_DEV = process.env.NODE_ENV === "development"
+
 export default function Login() {
 
   const supabase = createClient();
@@ -14,7 +16,7 @@ export default function Login() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `http://localhost:3000/admin`,
+        redirectTo: `${IS_DEV ? "http://localhost:3000" : "https://finnegansopenmic.us"}/admin`,
       },
     })
 
