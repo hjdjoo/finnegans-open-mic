@@ -1,10 +1,7 @@
 import { BookOpenIcon } from '@heroicons/react/24/outline'
 import createClient from '@/lib/clientSupabase'
 import FlipbookGallery from "@/components/Flipbook"
-import { Tables } from '@/lib/database.types';
 import { type FlipbookPage } from '@/components/Flipbook';
-
-type ImageData = Tables<"images">
 
 async function getNotebookImages() {
 

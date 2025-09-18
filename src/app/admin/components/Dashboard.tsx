@@ -5,7 +5,6 @@ import createClient from '@/lib/clientSupabase'
 import ImageUploader from '@/components/ImageUploader'
 import StatusUpdater from "./StatusUpdater"
 import { User } from '@supabase/supabase-js'
-// import Forbidden from '@/components/Forbidden'
 
 interface AdminDashboardProps {
   user: User

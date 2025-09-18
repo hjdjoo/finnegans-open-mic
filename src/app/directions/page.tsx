@@ -1,4 +1,6 @@
 import Image from "next/image"
+import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/outline'
+import clsx from 'clsx'
 
 const MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
 
@@ -39,24 +41,33 @@ export default function DirectionsPage() {
           <div className="card">
             <h2 className="text-xl font-semibold text-irish-gold mb-4">Parking</h2>
             <p className="text-gray-400 mb-2">
-              {`Street parking is available on the surrounding blocks. Bus stops on Clinton St are not active on Sundays, which may be an option.`}
+              {`Street parking is available on the surrounding blocks.`}
+            </p>
+            <p className="text-gray-400 mb-2">
+              {`Bus stops on Clinton St are not active on Sundays, which provides a few extra spaces.`}
             </p>
             <p className="text-gray-400 mb-2">
               {`If surrounding blocks are full, parking on Washington Ave and walking ~5 min to the pub may be the best option.`}
             </p>
             <p className="text-gray-400 mb-2">
+              {`Street parking is free on Sundays.`}
+            </p>
+            <p className="text-gray-400 mb-2">
               {`There are also parking garages in the area.`}
             </p>
-            <p className="text-sm text-gray-400">
-              {`Note: Make sure you park on the side of the street without the solid green "residents only" signs.`}
+            <p className="text-sm text-gray-400 mb-4">
+              {`Note: Make sure you park on the side of the street with the white "PERMIT PARKING ONLY" signs.`}
             </p>
-            <div className="card flex flex-row items-center justify-evenly">
+            <div className="card bg-gray-700/50 flex flex-row items-center justify-evenly">
               <div className="flex flex-col j">
                 <div className="relative grow-1 min-h-[300px] ">
                   <Image src="/hoboken_parking_yes.jpg" fill objectFit="contain" sizes={"(max-width-200)"} alt="hoboken parking permitted image" />
                 </div>
                 <div>
-                  <p>Parking Permitted</p>
+                  <span className="flex justify-betwen items-center">
+                    Parking Permitted
+                    <CheckCircleIcon className="h-8 w-8 ml-1 text-green-500" />
+                  </span>
                 </div>
               </div>
               <div className="flex flex-col justify-between">
@@ -64,7 +75,10 @@ export default function DirectionsPage() {
                   <Image src="/hoboken_parking_no.jpg" fill objectFit="contain" sizes={"(max-width-200)"} alt="hoboken parking NOT permitted image" />
                 </div>
                 <div>
-                  <p>Parking NOT Permitted</p>
+                  <span className="flex justify-betwen items-center">
+                    Parking NOT Permitted
+                    <XCircleIcon className="h-8 w-8 ml-1 text-red-500" />
+                  </span>
                 </div>
               </div>
             </div>
