@@ -2,9 +2,9 @@
 
 import HTMLFlipBook from 'react-pageflip';
 import Image from 'next/image';
-import { ChangeEvent, SetStateAction, useRef, useState } from 'react';
+import { ChangeEvent, useRef, useState } from 'react';
 import type { PageFlip } from "page-flip"
-import { getPrevSundayDate, formatDate } from '@/lib/utils';
+import { getPrevSundayDate } from '@/lib/utils';
 
 
 

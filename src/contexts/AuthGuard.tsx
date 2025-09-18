@@ -4,7 +4,6 @@ import { useEffect, useState, createContext } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import createClient from "@/lib/clientSupabase";
 import type { User } from '@supabase/supabase-js';
-// import Forbidden from '@/components/Forbidden';
 import { checkAdmin } from '@/lib/clientActions';
 import Spinner from '@/components/Spinner';
 
@@ -27,10 +26,6 @@ export const AuthContext = createContext<AuthContext>({
 });
 
 
-/**
- * Client-side auth guard that handles the actual user verification
- * This is more efficient than doing it in middleware
- */
 export default function AuthGuard({
   children,
   fallback = <Spinner />,

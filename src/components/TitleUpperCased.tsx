@@ -6,7 +6,7 @@ import clsx from "clsx";
    * 
    * @param title string - expect something like "Lorem Ipsum Blah Blah"
    * @param firstLetSize string - Tailwind class for text sizing: sm, m, lg, 2xl, etc
-   * @returns JSX.Element - With Title Uppercasing.
+   * @returns JSX.Element - With Title Uppercasing: LOREM IPSUM BLAH BLAH where the first letter is a bit bigger.
    */
 export default function TitleUpperCased(title: string, firstClass: string, secondClass: string) {
 
