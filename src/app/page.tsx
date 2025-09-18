@@ -10,7 +10,7 @@ import { Json } from '@/lib/database.types';
 import type { WelcomeText, OpenMicStatus } from '@/lib/types'
 import clsx from 'clsx'
 
-export async function getLatestGalleryImages() {
+async function getLatestGalleryImages() {
   const supabase = createClient();
 
   const { data, error } = await supabase

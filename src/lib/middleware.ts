@@ -1,10 +1,10 @@
-import { createServerClient, type CookieOptions } from '@supabase/ssr';
+import { createServerClient } from '@supabase/ssr';
 import { NextRequest, NextResponse } from 'next/server';
 import { SUPABASE_COOKIE_OPTIONS, SUPABASE_AUTH_OPTIONS } from './serverSupabase';
 import { Database } from './database.types';
 
 
-function createMiddlewareClient(request: NextRequest, response: NextResponse) {
+function createMiddlewareClient(request: NextRequest, _response: NextResponse) {
 
   let supabaseResponse = NextResponse.next({request})
 

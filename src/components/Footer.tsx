@@ -63,7 +63,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-12 pt-8 border-t border-dark-border text-center text-gray-500 text-sm">
-          <p>© {new Date().getFullYear()} Darryl Joo - Finnegan's Pub, Hoboken. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} {`Darryl Joo - Finnegan's Pub, Hoboken. All rights reserved.`}</p>
         </div>
       </div>
     </footer>
