@@ -30,34 +30,33 @@ export default function StatusCard({ status }: StatusCardProps) {
         <div className="relative flex items-center">
           <div className="flex grow-3 items-center justify-between">
             <div className="flex items-center space-x-3">
-              <CalendarDaysIcon className="h-6 w-6 text-irish-gold" />
-              <h2 className="text-xl font-bold">Open Mic Status: </h2>
+              <h2 className="text-sm md:text-lg font-bold">"Is there open mic this week?" </h2>
             </div>
           </div>
 
           <div className="flex grow-1 items-center justify-end bg-dark-bg/50 rounded-lg">
-            <span className="text-gray-400">Date: </span>
-            <span className="font-medium text-irish-gold ml-2">
-              {status.next_date || dateString}
-            </span>
-          </div>
-          <div className="flex space-y-4 ml-2 grow-2 justify-end">
-            <div className="flex my-auto items-center justify-between bg-dark-bg/50 rounded-lg">
-              <span className="text-gray-400">Status: </span>
+
+
+            <div className="flex ml-2 my-auto items-center justify-between bg-dark-bg/50 rounded-lg">
+              <span className="text-gray-300 text-xs md:text-lg">{status.active ? "Yes" : "No"}{`, we are`}</span>
               <span className={clsx(
-                'font-bold text-lg ml-2',
+                'font-bold text-xs md:text-lg ml-2',
                 status.active ? 'text-green-500' : 'text-red-500'
               )}>
                 {status.active ? 'ON' : 'OFF'}
               </span>
+              <span className="ml-2 text-xs md:text-lg text-gray-300">for</span>
+              <span className="text-xs md:text-lg text-irish-gold ml-2">
+                {status.next_date || dateString}
+              </span>
               <span className={clsx(
-                'font-bold text-lg ml-2',
+                'font-bold text-xs md:text-lg ml-2',
                 status.active ? 'text-green-500' : 'text-red-500'
               )}>
                 {status.active ? (
-                  <CheckCircleIcon className="h-8 w-8 text-green-500" />
+                  <CheckCircleIcon className="h-4 w-4 md:h-6 md:w-6 text-green-500" />
                 ) : (
-                  <XCircleIcon className="h-8 w-8 text-red-500" />
+                  <XCircleIcon className="h-4 w-4 md:h-6 md:w-6 text-red-500" />
                 )}
               </span>
             </div>
@@ -66,7 +65,8 @@ export default function StatusCard({ status }: StatusCardProps) {
           <div className="flex space-y-4 grow-1 justify-end">
             {status.message.length && (
               <div className="p-4 bg-irish-green/10 border border-irish-green/30 rounded-lg">
-                <p className="text-sm text-gray-300">{status.message}</p>
+                <p className="font-bold text-end text-xs md:text-sm text-gray-300">Message: </p>
+                <p className="text-xs md:text-sm text-gray-300">{status.message}</p>
               </div>
             )}
           </div>
