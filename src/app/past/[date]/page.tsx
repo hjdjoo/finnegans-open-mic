@@ -1,12 +1,11 @@
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
+import { unstable_cache } from 'next/cache'
 import { ArrowLeftIcon, BookOpenIcon } from '@heroicons/react/24/outline'
 import createClient from '@/lib/clientSupabase'
 import Gallery from '@/components/Gallery'
 
-
-export const revalidate = 60 * 60 // seconds
 
 export async function generateStaticParams() {
 
@@ -62,7 +61,13 @@ export default async function PastMicPage({ params }: {
 
   const { date } = await params;
 
-  const images = await getGalleryImages(date);
+  const getCachedImages = unstable_cache(async (date: string) => {
+    return await getGalleryImages(date);
+  }, [], {
+    revalidate: 60 * 60 * 24
+  })
+
+  const images = await getCachedImages(date);
 
   if (!images || (images.openMicImages.length === 0 && !images.notebookImages)) {
     notFound()
@@ -94,7 +99,6 @@ export default async function PastMicPage({ params }: {
   return (
     <div className="min-h-screen pt-24 pb-12">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
         <div className="mb-8">
           <Link
             href="/past"

@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { CalendarDaysIcon, PhotoIcon, BookOpenIcon } from '@heroicons/react/24/outline'
 import createClient from '@/lib/clientSupabase'
+import { unstable_cache } from 'next/cache'
 
 type PastMicData = {
   date: string
@@ -8,7 +9,10 @@ type PastMicData = {
   hasNotebook: boolean
 }
 
-export const revalidate = 60 * 60;
+type ImageData = {
+  date: string
+  type: string | "open-mic" | "notebook"
+}
 
 async function getPastMics() {
 
@@ -24,12 +28,17 @@ async function getPastMics() {
     return []
   }
 
+  return data;
+
+}
+
+function reduceImageData(imageData: ImageData[]) {
   type MicDataReducer = {
     [date: string]: PastMicData
   }
 
   // Group by date and count images
-  const micsByDate = data?.reduce((acc: MicDataReducer, img) => {
+  const micsByDate = imageData?.reduce((acc: MicDataReducer, img) => {
     if (!acc[img.date]) {
       acc[img.date] = {
         date: img.date,
@@ -53,7 +62,16 @@ async function getPastMics() {
 }
 
 export default async function PastMicsPage() {
-  const pastMics = await getPastMics()
+
+  const getPastMicsCached = unstable_cache(async () => {
+    return await getPastMics()
+  },
+    [],
+    { revalidate: 60 * 60 * 24 })
+
+  const cachedImageData = await getPastMicsCached();
+
+  const pastMics = reduceImageData(cachedImageData);
 
   return (
     <div className="min-h-screen pt-24 pb-12">
