@@ -63,7 +63,7 @@ export default function StatusCard({ status }: StatusCardProps) {
 
           </div>
           <div className="flex space-y-4 grow-1 justify-end">
-            {status.message.length && (
+            {status.message && (
               <div className="p-4 bg-irish-green/10 border border-irish-green/30 rounded-lg">
                 <p className="font-bold text-end text-xs md:text-sm text-gray-300">Message: </p>
                 <p className="text-xs md:text-sm text-gray-300">{status.message}</p>
