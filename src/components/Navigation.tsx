@@ -29,6 +29,11 @@ export default function Navigation() {
   const pathname = usePathname()
 
   useEffect(() => {
+
+    if (window.pageYOffset > 0) {
+      setIsScrolled(true)
+    }
+
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10)
     }
@@ -88,7 +93,7 @@ export default function Navigation() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="lg:hidden p-2 text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-irish-gold rounded-lg"
+            className="lg:hidden p-2 text-gray-300 hover:text-white hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-irish-gold rounded-lg"
             aria-label="Toggle menu"
           >
             {isMobileMenuOpen ? (
@@ -101,8 +106,8 @@ export default function Navigation() {
 
         {/* Mobile Navigation */}
         {isMobileMenuOpen && (
-          <div className="md:hidden py-4 animate-slide-up">
-            <div className="flex flex-col space-y-2">
+          <div className="absolute top-15 right-10 lg:hidden py-4 animate-slide-up">
+            <div className="flex flex-col space-y-2 bg-gray-700/50 backdrop-blur-md">
               {navLinks.map((link) => (
                 <Link
                   key={link.name}
