@@ -30,7 +30,7 @@ export default function StatusCard({ status }: StatusCardProps) {
         <div className="relative flex items-center">
           <div className="flex grow-3 items-center justify-between">
             <div className="flex items-center space-x-3">
-              <h2 className="text-sm md:text-lg font-bold">{`${"Is there open mic this week?"}`} </h2>
+              <h2 className="text-sm md:text-lg font-bold">{"Is there open mic this week?"} </h2>
             </div>
           </div>
 
