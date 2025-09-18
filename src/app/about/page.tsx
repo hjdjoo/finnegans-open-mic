@@ -12,11 +12,15 @@ export default function AboutPage() {
           </div>
           <div className="grid md:grid-cols-2 gap-6 mb-8">
             <div className="card">
-              <h2 className="text-xl font-bold text-irish-gold mb-3">For The Performers</h2>
+              <h2 className="text-xl font-bold text-irish-gold mb-3">For The Performers:</h2>
               <ul className="space-y-2">
                 <li className="flex items-start text-gray-400">
                   <span className="inline-block w-2 h-2 bg-irish-gold rounded-full mt-1.5 mr-3 flex-shrink-0"></span>
                   {`Sign-ups begin around 7PM.`}
+                </li>
+                <li className="flex items-start text-gray-400">
+                  <span className="inline-block w-2 h-2 bg-irish-gold rounded-full mt-1.5 mr-3 flex-shrink-0"></span>
+                  {`There is a full back line provided with up to 3 inputs and 3 mics.`}
                 </li>
                 <li className="flex items-start text-gray-400">
                   <span className="inline-block w-2 h-2 bg-irish-gold rounded-full mt-1.5 mr-3 flex-shrink-0"></span>
@@ -26,7 +30,7 @@ export default function AboutPage() {
             </div>
 
             <div className="card">
-              <h2 className="text-xl font-bold text-irish-gold mb-3">For The Audience</h2>
+              <h2 className="text-xl font-bold text-irish-gold mb-3">For The Audience:</h2>
               <ul className="space-y-2">
                 <li className="flex items-start text-gray-400">
                   <span className="inline-block w-2 h-2 bg-irish-gold rounded-full mt-1.5 mr-3 flex-shrink-0"></span>
@@ -65,7 +69,7 @@ export default function AboutPage() {
               </li>
               <li className="flex items-start">
                 <span className="inline-block w-2 h-2 bg-irish-gold rounded-full mt-1.5 mr-3 flex-shrink-0"></span>
-                <span>{`The host will *not* ask the audience to be quiet; it is up to you as the performer to capture the crowd!`}</span>
+                <span>The host will usually <em>not</em> ask the audience to be quiet; it is up to you as the performer as to how you will capture the crowd!</span>
               </li>
               <li className="flex items-start">
                 <span className="inline-block w-2 h-2 bg-irish-gold rounded-full mt-1.5 mr-3 flex-shrink-0"></span>

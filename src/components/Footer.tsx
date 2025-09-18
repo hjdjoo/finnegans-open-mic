@@ -1,9 +1,10 @@
+"use client";
 
-// components/Footer.tsx
 import Link from 'next/link'
 import { EnvelopeIcon, MapPinIcon, CalendarDaysIcon } from '@heroicons/react/24/outline'
 
 export default function Footer() {
+
   return (
     <footer className="bg-dark-surface border-t border-dark-border mt-20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -19,7 +20,7 @@ export default function Footer() {
             </p>
             <a
               href="mailto:finnegansopenmic@gmail.com"
-              className="text-irish-gold hover:text-irish-gold-light transition-colors"
+              className="text-irish-gold md:text-xs hover:text-irish-gold-light transition-colors"
             >
               finnegansopenmic@gmail.com
             </a>
@@ -51,9 +52,8 @@ export default function Footer() {
               <h3 className="text-lg font-semibold">Every Sunday</h3>
             </div>
             <p className="text-gray-400 mb-3">
-              Sign-ups: 7:00 PM<br />
-              Show starts: 7:30 PM<br />
-              All performers welcome!
+              Sign-ups: around 7:00 PM<br />
+              Show starts: also around 7:00 PM<br />
             </p>
             <div className="flex items-center space-x-2 text-sm">
               <span className="inline-block w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>

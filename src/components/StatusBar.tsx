@@ -41,8 +41,8 @@ export default function StatusCard({ status }: StatusCardProps) {
               {status.next_date || dateString}
             </span>
           </div>
-          <div className="flex space-y-4 grow-1 justify-end">
-            <div className="flex items-center justify-between bg-dark-bg/50 rounded-lg">
+          <div className="flex space-y-4 ml-2 grow-2 justify-end">
+            <div className="flex my-auto items-center justify-between bg-dark-bg/50 rounded-lg">
               <span className="text-gray-400">Status: </span>
               <span className={clsx(
                 'font-bold text-lg ml-2',
@@ -62,12 +62,13 @@ export default function StatusCard({ status }: StatusCardProps) {
               </span>
             </div>
 
-            {status.message && (
+          </div>
+          <div className="flex space-y-4 grow-1 justify-end">
+            {status.message.length && (
               <div className="p-4 bg-irish-green/10 border border-irish-green/30 rounded-lg">
                 <p className="text-sm text-gray-300">{status.message}</p>
               </div>
             )}
-
           </div>
         </div>
       </div>

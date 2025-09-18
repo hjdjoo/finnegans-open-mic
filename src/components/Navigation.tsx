@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import clsx from 'clsx'
+import TitleUpperCased from './TitleUpperCased'
 
 const DEV = process.env.NODE_ENV === "development"
 
@@ -44,7 +45,7 @@ export default function Navigation() {
           : 'bg-transparent'
       )}
     >
-      <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <nav className="container mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-24">
           {/* Logo */}
           <Link href="/" className="flex items-center mx-1 group">
@@ -56,19 +57,15 @@ export default function Navigation() {
                 className="object-contain"
               />
             </div>
-            <span className="text-xl font-serif font-bold font-stretch-condensed text-gray-300 group-hover:text-irish-gold-light transition-transform duration-200">
-              <span className="text-2xl">{`T`}</span><span className="text-lg">{`HE `}</span>
-              <span className="text-2xl">{`M`}</span><span className="text-lg">{`USICIANS' `}</span>
-              <span className="text-2xl">{`O`}</span><span className="text-lg">{`PEN `}</span>
-              <span className="text-2xl">{`M`}</span><span className="text-lg">{`IC `}</span>
-              <span className="text-lg">{`A`}</span><span className="text-lg">{`T`}</span>
+            <span className="font-serif font-bold font-stretch-condensed text-gray-300 group-hover:text-irish-gold-light transition-transform duration-200">
+              {TitleUpperCased("The Musician's Open Mic", "text-2xl lg:text-xl xl:text-2xl", "text-md lg:text-md xl:text-xl")}
               <br />
-              <span className="text-3xl">{`F`}</span><span className="text-xl">{`INNEGAN'S `}</span>
-              <span className="text-3xl">{`P`}</span><span className="text-xl">{`UB`}</span>
+              <span className="text-lg">{`A`}</span><span className="text-lg">{`T `}</span>
+              {TitleUpperCased("Finnegan's Pub", "text-2xl lg:text-xl xl:text-2xl", "text-md lg:text-md xl:text-xl")}
             </span>
           </Link>
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden lg:flex items-center space-x-8">
             {navLinks.map((link) => (
               <Link
                 key={link.name}
@@ -91,7 +88,7 @@ export default function Navigation() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden p-2 text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-irish-gold rounded-lg"
+            className="lg:hidden p-2 text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-irish-gold rounded-lg"
             aria-label="Toggle menu"
           >
             {isMobileMenuOpen ? (

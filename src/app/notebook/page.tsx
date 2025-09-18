@@ -76,7 +76,7 @@ export default async function NotebookPage() {
           </div>
         ) : (
           <div className="container">
-            <FlipbookGawllery
+            <FlipbookGallery
               pages={pages}
             />
           </div>

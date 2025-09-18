@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import clsx from 'clsx'
 import Link from 'next/link'
+import TitleUpperCased from './TitleUpperCased'
 
 interface WelcomeCardProps {
   title: string
@@ -14,43 +15,6 @@ export default function WelcomeCard({ title, description }: WelcomeCardProps) {
 
   const titleStart = title.slice(0, title.indexOf("at"))
   const titleEnd = title.slice(title.indexOf("at") + 2)
-
-  /**
-   * 
-   * @param title string - expect something like "Lorem Ipsum Blah Blah"
-   * @param firstLetSize string - Tailwind class for text sizing: sm, m, lg, 2xl, etc
-   * @returns JSX.Element - With Title Uppercasing.
-   */
-  const TitleUpperCased = (title: string, firstLetSize: string, secondSize: string) => {
-
-    const titleArr = title.split(" ");
-
-    const titleDisplay = titleArr.map((word, idx) => {
-
-      return (
-        <span key={`title-${word}-${idx}`}>
-          <span className={clsx([`text-${firstLetSize}`])}>
-            {word.toLocaleUpperCase()[0]}
-          </span>
-          <span>
-            {`${word.slice(1).toLocaleUpperCase()} `}
-          </span>
-        </span>
-      )
-
-    })
-
-
-
-    return (
-      <>
-        <span className={clsx([`text-${secondSize}`])}>{titleDisplay}</span>
-      </>
-    )
-
-  }
-
-
 
 
   useEffect(() => {
@@ -67,13 +31,13 @@ export default function WelcomeCard({ title, description }: WelcomeCardProps) {
         )}
       >
         <h1 className="font-bold font-serif mb-4">
-          <span className="text-irish-gold">{TitleUpperCased(titleStart, "5xl", "4xl")}</span>
+          <span className="text-irish-gold">{TitleUpperCased(titleStart, "text-3xl md:text-5xl", "text-2xl md:text-4xl")}</span>
         </h1>
-        <h2 className="text-2xl md:text-xl font-bold font-serif mb-2">
+        <h2 className="text-lg md:text-xl font-bold font-serif mb-2">
           <span className="text-gray-300">AT</span>
         </h2>
-        <h2 className="text-3xl md:text-3xl font-serif font-bold mb-4">
-          <span className="text-irish-gold">{TitleUpperCased(titleEnd, "4xl", "3xl")}</span>
+        <h2 className="font-serif font-bold mb-4">
+          <span className="text-irish-gold">{TitleUpperCased(titleEnd, "text-2xl md:text-4xl", "text-xl md:text-3xl")}</span>
         </h2>
         <p className="text-lg md:text-xl text-gray-300 font-serif leading-relaxed">
           {description}
@@ -90,7 +54,11 @@ export default function WelcomeCard({ title, description }: WelcomeCardProps) {
           </p>
           <p className="flex items-center space-x-2">
             <span className="inline-block w-1.5 h-1.5 bg-irish-gold rounded-full"></span>
-            <span>Musical sets only</span>
+            <span>Collaborations Encouraged</span>
+          </p>
+          <p className="flex items-center space-x-2">
+            <span className="inline-block w-1.5 h-1.5 bg-irish-gold rounded-full"></span>
+            <span>Full Kit (rods provided - no sticks!)</span>
           </p>
           <Link href="/about">
             <p className="flex items-center italic space-x-2">
