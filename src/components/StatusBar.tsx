@@ -1,6 +1,6 @@
 'use client'
 
-import { CalendarDaysIcon, CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/outline'
+import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/outline'
 import clsx from 'clsx'
 
 interface StatusCardProps {
