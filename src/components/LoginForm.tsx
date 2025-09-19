@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation';
 import createClient from '@/lib/clientSupabase'
 import Spinner from './Spinner';
 
@@ -9,14 +10,28 @@ const IS_DEV = process.env.NODE_ENV === "development"
 export default function Login() {
 
   const supabase = createClient();
-  const [loading, setLoading] = useState(false)
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+
+    async function checkUser () {
+      const {data} = await supabase.auth.getUser();
+      if (data) {
+        router.push("/admin");
+      }
+    }
+    checkUser();
+
+  }, [router])
 
   const handleGoogleLogin = async () => {
     setLoading(true)
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${IS_DEV ? "http://localhost:3000" : "https://finnegansopenmic.us"}/admin`,
+        redirectTo: `${IS_DEV ? "http://localhost:3000" : "https://finnegansopenmic.us"}/login`,
+        queryParams: {prompt: "select_account"}
       },
     })
 
