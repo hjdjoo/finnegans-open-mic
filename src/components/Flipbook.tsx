@@ -7,7 +7,6 @@ import type { PageFlip } from "page-flip"
 import { getPrevSundayDate } from '@/lib/utils';
 
 
-
 type FlipbookRef = React.RefObject<typeof HTMLFlipBook | null> & {
   pageFlip: () => PageFlip
 }
@@ -58,8 +57,8 @@ function FlipbookPage({ page, ref }: FlipbookPageProps) {
 function Flipbook({
   className = "",
   style = {},
-  width = 600,
-  height = 800,
+  width = 450,
+  height = 700,
   children,
   ref
 }
@@ -78,15 +77,15 @@ function Flipbook({
       drawShadow={true}
       minWidth={300}
       maxWidth={1000}
-      minHeight={400}
-      maxHeight={1200}
+      minHeight={300}
+      maxHeight={700}
       showCover={true}
       flippingTime={1000}
       usePortrait={true}
       startZIndex={0}
       autoSize={true}
       maxShadowOpacity={0.5}
-      mobileScrollSupport={true}
+      mobileScrollSupport={false}
       swipeDistance={30}
       clickEventForward={true}
       useMouseEvents={true}
@@ -124,7 +123,7 @@ export default function FlipbookGallery({ className, style, width, height, pages
       flipbook.current?.pageFlip().flip(datePageCache[selectedDate])
     } else {
       let nearestNextSun = "";
-      let i = 1;
+      let i = 1; // skip covers
       const selectedSundayTime = new Date(selectedDate).getTime();
       if (!pages.length) { return }
       while (!nearestNextSun.length || i < pages.length - 1) {
@@ -134,8 +133,6 @@ export default function FlipbookGallery({ className, style, width, height, pages
         const currPage = pages[i]
         const pageSundayTime = new Date(currPage.date).getTime();
         if (pageSundayTime > selectedSundayTime) {
-          console.log("next date found");
-          console.log(currPage);
           nearestNextSun = currPage.date;
           break;
         }

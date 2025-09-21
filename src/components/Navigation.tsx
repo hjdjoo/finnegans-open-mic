@@ -24,6 +24,8 @@ if (DEV) {
 }
 
 export default function Navigation() {
+
+  const [isSmallHeight, setIsSmallHeight] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const pathname = usePathname()
@@ -32,6 +34,10 @@ export default function Navigation() {
 
     if (window.pageYOffset > 0) {
       setIsScrolled(true)
+    }
+
+    if (window.innerHeight < 500) {
+      setIsSmallHeight(true);
     }
 
     const handleScroll = () => {
@@ -44,7 +50,8 @@ export default function Navigation() {
   return (
     <header
       className={clsx(
-        'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
+        isSmallHeight ? 'absolute' : 'fixed',
+        'top-0 left-0 right-0 z-50 transition-all duration-300',
         isScrolled
           ? 'bg-dark-bg/95 backdrop-blur-md border-b border-dark-border'
           : 'bg-transparent'
