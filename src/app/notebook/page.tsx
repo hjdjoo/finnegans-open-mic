@@ -60,7 +60,7 @@ export default async function NotebookPage() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center space-x-3 mb-2">
           <BookOpenIcon className="h-8 w-8 text-irish-gold" />
-          <h1 className="text-3xl md:text-4xl font-bold">The Notebook</h1>
+          <h1 className="text-2xl md:text-3xl font-bold">The Notebook</h1>
         </div>
         <p className="text-xl text-gray-400 mb-8">
           A collection of doodles and memories from every open mic night
