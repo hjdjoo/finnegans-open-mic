@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "test": "jest",
+    "ngrok": "ngrok http http://localhost:3000",
     "supabase:types": "supabase gen types typescript --project-id fpqawevrwgbaovswsfng --schema public > ./src/lib/database.types.ts",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
