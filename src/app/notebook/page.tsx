@@ -1,7 +1,8 @@
 import { BookOpenIcon } from '@heroicons/react/24/outline'
 import createClient from '@/lib/clientSupabase'
-import FlipbookGallery from "@/components/Flipbook"
+import FlipbookGallery from './components/FlipbookGallery';
 import { type FlipbookPage } from '@/components/Flipbook';
+
 
 async function getNotebookImages() {
 
@@ -11,7 +12,7 @@ async function getNotebookImages() {
     .from('images')
     .select('*')
     .in('type', ['notebook', 'notebook-front', 'notebook-back'])
-    .order('date', { ascending: true })
+    .order('date', { ascending: true });
 
   if (error) {
     console.error('Error fetching notebook images:', error)
@@ -25,22 +26,22 @@ async function getNotebookImages() {
 export default async function NotebookPage() {
   const notebookImages = await getNotebookImages();
   const pages: FlipbookPage[] = [];
-  let backCover: FlipbookPage | undefined = undefined
+  const covers: FlipbookPage[] = [];
 
   notebookImages.forEach((image) => {
     if (image.type === 'notebook-front') {
-      pages.unshift({
+      covers.unshift({
         id: image.id,
         imageUrl: image.url,
         date: image.date
       })
     }
     if (image.type === 'notebook-back') {
-      backCover = {
+      covers.push({
         id: image.id,
         imageUrl: image.url,
         date: image.date
-      }
+      })
     }
     if (image.type === 'notebook') {
       pages.push({
@@ -51,9 +52,6 @@ export default async function NotebookPage() {
     }
   })
 
-  if (backCover) {
-    pages.push(backCover);
-  }
 
   return (
     <div className="min-h-screen pt-24 pb-12">
@@ -75,6 +73,7 @@ export default async function NotebookPage() {
           <div className="container">
             <FlipbookGallery
               pages={pages}
+              covers={covers}
             />
           </div>
         )}
