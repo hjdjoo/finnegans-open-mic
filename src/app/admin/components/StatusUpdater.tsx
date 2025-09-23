@@ -87,7 +87,7 @@ export default function StatusUpdater() {
       </div>
       <div id="status-preview" className="mb-4">
         <p>Next Open Mic Status Bar Preview:</p>
-        <div className="px-12">
+        <div className="px-2">
           <StatusCard status={getStatusFromForm(form)}></StatusCard>
         </div>
       </div>
