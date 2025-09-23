@@ -2,7 +2,7 @@
 
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { getPrevSundayDate } from '@/lib/utils';
-import Flipbook, { FlipbookPage, FlipbookRef } from "@/components/Flipbook";
+import Flipbook, { FlipbookPage, FlipbookRef, FlipEvent } from "@/components/Flipbook";
 
 interface FlipbookGalleryProps {
   style?: object
@@ -23,20 +23,17 @@ interface FlipbookGalleryProps {
  */
 export default function FlipbookGallery({ className, style, width, height, pages, covers }: FlipbookGalleryProps) {
 
+  // console.log(pages, covers);
+
   const flipbook = useRef<FlipbookRef>(null)
 
   const orientation = useRef<"portrait" | "landscape">("landscape");
-  const dateRange = useRef<number[]>([]);
 
-  // idx of RENDERED pages
-  const viewingPage = useRef<number>(0);
+  // idx of RENDERED page
+  // const viewingPage = useRef<number>(0);
+  const [viewingPage, setViewingPage] = useState(0);
+
   const [selectedDate, setSelectedDate] = useState<string>("");
-
-  const [pagesToRender, setPagesToRender] = useState<FlipbookPage[]>([]);
-
-  useEffect(() => {
-    setPagesToRender(pages.slice(viewingPage.current, viewingPage.current + 6));
-  }, [])
 
   // cache of *all* page dates and their indices;
   const dateIdxCache: { [date: string]: number } = pages.reduce((acc, page, idx) => {
@@ -53,15 +50,20 @@ export default function FlipbookGallery({ className, style, width, height, pages
     setSelectedDate(sundayStr);
   }
 
+  // onFlip event returns the page number that was flipped to (of the children contained within the Flipbook element)
+  function handleFlip(e: FlipEvent) {
 
+    const { data: pageNum } = e;
+    // pageNum serves as pointer for which page is being viewed;
+    setViewingPage(pageNum);
+
+  }
 
   function goToDate() {
     if (!flipbook) return;
 
     if (dateIdxCache[selectedDate]) {
-
       flipbook.current?.pageFlip().flip(dateIdxCache[selectedDate]);
-
     }
 
     else {
@@ -78,36 +80,15 @@ export default function FlipbookGallery({ className, style, width, height, pages
         const pageSundayTime = new Date(currPage.date).getTime();
         if (pageSundayTime > selectedSundayTime) {
 
-          setPagesToRender(pages.slice(i, i + 6));
+          // setPagesToRender(pages.slice(i, i + 6));
           nearestNextSun = currPage.date;
           break;
         }
         i++;
       };
 
-      flipbook.current?.pageFlip().flip(i - 1)
-    }
-
-
-  }
-
-  function handleFlip(data: number) {
-    console.log(data);
-    viewingPage.current = data;
-
-    switch (orientation.current) {
-      case "landscape":
-
-        if (data >= pagesToRender.length - 1) {
-
-          const newPagesToRender = []
-
-        }
-
-        break;
-      case "portrait":
-    }
-
+      flipbook.current?.pageFlip().turnToPage(i)
+    };
   }
 
   function handleOrientation(orientationChange: "portrait" | "landscape") {
@@ -115,9 +96,11 @@ export default function FlipbookGallery({ className, style, width, height, pages
   }
 
   // notebook pages only;
-  const FlipbookPages = pagesToRender.map((page, idx) => {
+  const FlipbookPages = pages.map((page, idx) => {
     return (
       <FlipbookPage
+        pageNum={idx + 1}
+        viewingPage={viewingPage}
         key={`flipbook-rendered-page-${idx}`}
         page={page}
       />
@@ -127,7 +110,7 @@ export default function FlipbookGallery({ className, style, width, height, pages
   return (
     <>
       <Flipbook
-        startPage={viewingPage.current}
+        startPage={0}
         handleOrientation={handleOrientation}
         handleFlip={handleFlip}
         className={className}
@@ -135,9 +118,9 @@ export default function FlipbookGallery({ className, style, width, height, pages
         width={width}
         height={height}
         ref={flipbook}>
-        <FlipbookPage page={covers[0]} />
+        <FlipbookPage page={covers[0]} pageNum={0} viewingPage={viewingPage} />
         {FlipbookPages}
-        <FlipbookPage page={covers[1]} />
+        <FlipbookPage page={covers[1]} pageNum={FlipbookPages.length} viewingPage={viewingPage} />
       </Flipbook>
       <div className="container flex justify-between my-3">
         <button className="py-2 px-3 transition-all backdrop-blur-md rounded-md bg-gray-500/50 hover:cursor-pointer hover:bg-gray-700/50" onClick={() => {

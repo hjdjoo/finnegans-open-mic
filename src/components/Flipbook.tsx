@@ -15,15 +15,22 @@ export interface FlipbookPage {
   caption?: string;
 }
 
+export interface FlipEvent {
+  data: number
+  object: PageFlip
+}
+
 interface FlipbookPageProps {
   page: FlipbookPage
+  pageNum: number
+  viewingPage: number
   ref?: React.RefObject<HTMLDivElement>
 }
 
 interface FlipbookProps {
   style?: object
   startPage?: number
-  handleFlip: (data: number) => void
+  handleFlip: (event: FlipEvent) => void
   handleOrientation: (orientation: "portrait" | "landscape") => void
   className?: string
   width?: number;
@@ -32,15 +39,21 @@ interface FlipbookProps {
   ref?: React.RefObject<FlipbookRef | null>
 }
 
-export function FlipbookPage({ page, ref }: FlipbookPageProps) {
+export function FlipbookPage({ page, ref, pageNum, viewingPage }: FlipbookPageProps) {
+
+  const renderImage = (pageNum > viewingPage - 3 && pageNum < viewingPage + 4)
+
   return (
     <div id={`page-${page.id}`} ref={ref}>
-      <Image
-        src={page.imageUrl}
-        alt={`notebook-page-${page.id}`}
-        fill
-        sizes='(max-width-600px)'
-      />
+      {renderImage &&
+        <Image
+          src={page.imageUrl}
+          alt={`notebook-page-${page.id}`}
+          unoptimized={true}
+          fill
+          sizes='(max-width-600px)'
+        />
+      }
     </div>
   )
 }
@@ -51,8 +64,8 @@ export default function Flipbook({
   handleOrientation,
   startPage,
   style = {},
-  width = 450,
-  height = 700,
+  width = 600,
+  height = 800,
   children,
   ref
 }
