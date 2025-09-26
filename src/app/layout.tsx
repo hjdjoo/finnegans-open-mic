@@ -7,8 +7,13 @@ import Footer from '@/components/Footer'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: "Finnegan's Open Mic - Sundays at 7",
-  description: 'Join us every Sunday for open mic night at Finnegan\'s Pub',
+  title: `Finnegan's Open Mic: Open Mic in Hoboken, New Jersey`,
+  description: `The homepage for the musicians' open mic at Finnegan's Pub in Hoboken, New Jersey. Every week Sundays at 7pm.`,
+  keywords: [
+    'open mic', 'open mics', 'hoboken', 'new jersey', 'bergen county', 'hudson county', 'live music',
+  ],
+  authors: [{ name: 'Darryl Joo' }],
+
 }
 
 export default function RootLayout({

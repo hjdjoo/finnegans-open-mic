@@ -23,7 +23,6 @@ interface FlipbookGalleryProps {
  */
 export default function FlipbookGallery({ className, style, width, height, pages, covers }: FlipbookGalleryProps) {
 
-  // console.log(pages, covers);
 
   const flipbook = useRef<FlipbookRef>(null)
 
