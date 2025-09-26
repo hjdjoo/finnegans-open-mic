@@ -1,6 +1,10 @@
+
+/**
+ * 
+ * @returns Tailwind Spinner Component;
+ * Flexbox div at 100% w&h, centered.
+ */
 export default function Spinner() {
-
-
   // Spinner component nested inside of a div for centering and size
   return (
     <div className="flex w-full h-full justify-center items-center">

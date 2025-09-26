@@ -6,6 +6,7 @@ import createClient from '@/lib/clientSupabase'
 import { compressImage, generateStoragePath, getPrevSundayDate, getNextSundayDate, formatDate } from '@/lib/utils'
 import clsx from 'clsx'
 import Image from 'next/image'
+import Spinner from './Spinner'
 
 interface ImageForUpload {
   id: string
@@ -27,7 +28,7 @@ export default function ImageUploader() {
   const [imageType, setImageType] = useState<ImageForUpload['type']>('open-mic')
   const [uploading, setUploading] = useState(false)
   const [dragActive, setDragActive] = useState(false)
-  const [previewLoading, setPreviewLoading] = useState(false);
+  const [useDateFromMetadata, setUseDateFromMetadata] = useState(false);
   /* To implement: checkbox "use selected date" to coerce images to be uploaded to a particular date */
   // const [useSelectedDate, setUseSelectedDate] = useState(false);
 
@@ -47,7 +48,6 @@ export default function ImageUploader() {
     setDragActive(false)
 
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      setPreviewLoading(true);
       handleFiles(e.dataTransfer.files)
     }
 
@@ -55,33 +55,51 @@ export default function ImageUploader() {
 
   const handleFiles = async (files: FileList) => {
 
-    const newImages: ImageForUpload[] = []
+    const newImages: ImageForUpload[] = [...images]
 
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i]
-      if (file.type.startsWith('image/')) {
-
-        const sundayDate = getPrevSundayDate(new Date(file.lastModified));
-        console.log("imageUploader/handleFiles/sundayDate: ", sundayDate);
-
-        const sundayStr = formatDate(sundayDate);
-        const compressedFile = await compressImage(file)
-        const preview = URL.createObjectURL(compressedFile)
-        newImages.push({
-          id: `${sundayStr}-${i}-${files[i].name}`,
-          file: compressedFile,
-          date: sundayDate,
-          preview,
-          type: imageType,
-          uploading: false,
-          uploaded: false,
-        })
-
+    try {
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i]
+        if (file.type.startsWith('image/')) {
+          const sundayDate = getPrevSundayDate(new Date(file.lastModified));
+          // console.log("imageUploader/handleFiles/sundayDate: ", sundayDate);
+          const sundayStr = formatDate(sundayDate);
+          const compressedFile = await compressImage(file)
+          const preview = URL.createObjectURL(compressedFile)
+          newImages[i] = {
+            id: `${sundayStr}-${i}-${files[i].name}`,
+            file: compressedFile,
+            date: sundayDate,
+            preview,
+            type: imageType,
+            uploading: false,
+            uploaded: false,
+          }
+          setImages(() => [...newImages]);
+        }
       }
+    } catch (e) {
+      console.error(e);
+
     }
 
-    setImages(prev => [...prev, ...newImages]);
-    setPreviewLoading(false);
+  }
+
+  const handlePlaceholders = async (files: FileList) => {
+    const newImages: ImageForUpload[] = []
+    // first render loading boxes for each;
+    for (let i = 0; i < files.length; i++) {
+      newImages.push({
+        id: `preview-placeholder-${i}`,
+        file: new File([], `preview-placeholder-${i}`),
+        date: new Date,
+        preview: "",
+        type: imageType,
+        uploading: false,
+        uploaded: false
+      })
+    };
+    setImages(() => [...newImages]);
   }
 
   const removeImage = (id: string) => {
@@ -122,7 +140,7 @@ export default function ImageUploader() {
         // const imageDate = image.date
         const storagePath = generateStoragePath(
           imageType,
-          imageType === 'open-mic' ?
+          useDateFromMetadata ?
             image.date : selectedSundayDate,
           image.file.name)
         const { error: uploadError } = await supabase.storage
@@ -196,8 +214,24 @@ export default function ImageUploader() {
           onChange={(e) => setSelectedDate(new Date(e.target.value))}
           className="px-4 py-2 bg-dark-bg border border-dark-border rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-irish-gold"
         />
+        <span className="mx-2">OR</span>
+        <label htmlFor="use-metadata-date"
+          className={clsx(
+            "mx-2 px-4 py-2 bg-dark-bg border border-dark-border rounded-lg focus:ring-2 focus:ring-irish-gold hover:cursor-pointer hover:bg-irish-green/50",
+            useDateFromMetadata ? "bg-irish-green" : ""
+          )}>
+          Use Date from Metadata
+          <input id="use-metadata-date"
+            type="checkbox"
+            hidden
+            checked={useDateFromMetadata}
+            onChange={() => {
+              setUseDateFromMetadata(!useDateFromMetadata);
+            }}
+          />
+        </label>
         <p className="mt-2 text-sm text-gray-500">
-          Uploading for: {dateString}
+          Uploading for: {useDateFromMetadata ? "Date from image metadata" : dateString}
         </p>
       </div>
 
@@ -272,9 +306,12 @@ export default function ImageUploader() {
           id="file-upload"
           multiple
           accept="image/*"
-          onChange={(e) => {
-            setPreviewLoading(true);
-            if (e.target.files) handleFiles(e.target.files);
+          onChange={async (e) => {
+            if (e.target.files) {
+              await handlePlaceholders(e.target.files);
+              await handleFiles(e.target.files);
+            }
+
           }}
           className="hidden"
         />
@@ -291,17 +328,9 @@ export default function ImageUploader() {
           </p>
         </label>
       </div>
-
       {/* Image Preview Grid */}
-      {previewLoading &&
-        <div className="h-40 flex space-x-1 items-center justify-center">
-          <div className="size-4 animate-bounce rounded-full bg-gray-600 [animation-delay:-0.3s] dark:bg-orange-400"></div>
-          <div className="size-4 animate-bounce rounded-full bg-gray-600 [animation-delay:-0.15s] dark:bg-orange-400"></div>
-          <div className="size-4 animate-bounce rounded-full bg-gray-600 dark:bg-orange-400"></div>
-        </div>
-      }
       {
-        !previewLoading && images.length > 0 && (
+        images.length > 0 && (
           <div className="mt-8">
             <h3 className="text-lg font-medium mb-4">
               {images.length} image{images.length !== 1 ? 's' : ''} selected
@@ -309,15 +338,24 @@ export default function ImageUploader() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {images.map((image) => (
                 <div key={image.id} className="relative group h-32">
-                  <Image
-                    src={image.preview}
-                    alt="Preview"
-                    fill
-                    className={clsx(
-                      'w-full h-32 object-cover rounded-lg',
-                      image.uploaded && 'opacity-50'
-                    )}
-                  />
+                  {image.preview === "" ?
+                    <div className="h-full w-full">
+                      <Spinner />
+                    </div>
+                    :
+                    <Image
+                      src={image.preview}
+                      // onLoad
+                      placeholder='blur'
+                      blurDataURL={`iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mM8c9uoHgAGrgJaP7YwdwAAAABJRU5ErkJggg==`}
+                      alt="Preview"
+                      fill
+                      className={clsx(
+                        'w-full h-32 object-cover rounded-lg',
+                        image.uploaded && 'opacity-50'
+                      )}
+                    />
+                  }
                   {image.uploading && (
                     <div className="absolute inset-0 flex items-center justify-center bg-dark-bg/80 rounded-lg">
                       <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-irish-gold"></div>
