@@ -63,6 +63,7 @@ export default function FlipbookGallery({ className, style, width, height, pages
     if (!flipbook) return;
 
     if (dateIdxCache[selectedDate]) {
+      setViewingPage(dateIdxCache[selectedDate]);
       flipbook.current?.pageFlip().flip(dateIdxCache[selectedDate]);
     }
 
