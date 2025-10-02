@@ -10,6 +10,8 @@ import { Json } from '@/lib/database.types';
 import type { WelcomeText, OpenMicStatus } from '@/lib/types'
 import clsx from 'clsx'
 
+export const revalidate = 3600;
+
 async function getLatestGalleryImages() {
   const supabase = createClient();
 
