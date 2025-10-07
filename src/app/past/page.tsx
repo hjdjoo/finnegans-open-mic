@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { CalendarDaysIcon, PhotoIcon, BookOpenIcon } from '@heroicons/react/24/outline'
+import { CalendarDaysIcon, PhotoIcon, BookOpenIcon, BackwardIcon } from '@heroicons/react/24/outline'
 import createClient from '@/lib/clientSupabase'
 import { unstable_cache } from 'next/cache'
 
@@ -76,7 +76,10 @@ export default async function PastMicsPage() {
   return (
     <div className="min-h-screen pt-24 pb-12">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-3xl md:text-4xl font-bold mb-2">Past Open Mics</h1>
+        <span className="flex items-center mb-2">
+          <BackwardIcon className="text-irish-gold w-8 h-8" />
+          <h1 className="text-3xl md:text-4xl font-bold ml-2">Past Open Mics</h1>
+        </span>
         <p className="text-xl text-gray-400 mb-8">
           Browse photos from previous Sunday nights
         </p>

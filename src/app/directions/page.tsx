@@ -1,17 +1,19 @@
 import Image from "next/image"
-import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/outline'
+import { CheckCircleIcon, XCircleIcon, MapIcon } from '@heroicons/react/24/outline'
 
 const MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
 
 export default function DirectionsPage() {
   return (
-    <div className="min-h-screen pt-24 pb-12">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
-        <h1 className="text-3xl md:text-4xl font-bold mb-8">Getting Here</h1>
-
+    <div id="directions-page" className="min-h-screen pt-24 pb-12">
+      <div id="directions-container" className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
+        <span className="flex items-center mb-8">
+          <MapIcon className="text-irish-gold w-8 h-8" />
+          <h1 className="text-3xl md:text-4xl font-bold ml-2">Getting Here</h1>
+        </span>
         <div className="grid gap-6">
-          <div className="card flex items-center justify-between">
-            <div>
+          <div className="card flex flex-col sm:flex-row items-center justify-between">
+            <div className="mb-2">
               <h2 className="text-xl font-semibold text-irish-gold mb-4">Address</h2>
               <p className="text-gray-300">
                 {`Finnegan's Pub`}<br />
@@ -22,11 +24,11 @@ export default function DirectionsPage() {
                 {`Located on the corner of Willow Ave and 8th St.`}
               </p>
             </div>
-            <div>
+            <div className="">
               <iframe
-                width="450"
-                height="300"
-                style={{ border: 0 }}
+                // width="450"
+                // height="300"
+                className={`w-full h-64`}
                 loading="lazy"
                 allowFullScreen
                 referrerPolicy="no-referrer-when-downgrade"
@@ -58,22 +60,22 @@ export default function DirectionsPage() {
               {`Note: Make sure you park on the side of the street with the white "PERMIT PARKING ONLY" signs.`}
             </p>
             <div className="card bg-gray-700/50 flex flex-row items-center justify-evenly">
-              <div className="flex flex-col j">
-                <div className="relative grow-1 min-h-[300px] ">
-                  <Image src="/hoboken_parking_yes.jpg" fill objectFit="contain" sizes={"(max-width-200)"} alt="hoboken parking permitted image" />
+              <div className="mx-4 flex flex-col justify-between">
+                <div className="relative grow-1 min-h-[200px] mb-1">
+                  <Image src="/hoboken_parking_yes.jpg" fill objectFit="contain" sizes={"(max-width-[200px])"} alt="hoboken parking permitted image" />
                 </div>
-                <div>
+                <div className="">
                   <span className="flex justify-betwen items-center">
                     Parking Permitted
                     <CheckCircleIcon className="h-8 w-8 ml-1 text-green-500" />
                   </span>
                 </div>
               </div>
-              <div className="flex flex-col justify-between">
-                <div className="relative grow-1 min-h-[300px] ">
-                  <Image src="/hoboken_parking_no.jpg" fill objectFit="contain" sizes={"(max-width-200)"} alt="hoboken parking NOT permitted image" />
+              <div className="mx-4 flex flex-col justify-between">
+                <div className="relative grow-1 min-h-[200px] mb-1">
+                  <Image src="/hoboken_parking_no.jpg" fill objectFit="contain" sizes={"(max-width-[200px])"} alt="hoboken parking NOT permitted image" />
                 </div>
-                <div>
+                <div className="">
                   <span className="flex justify-betwen items-center">
                     Parking NOT Permitted
                     <XCircleIcon className="h-8 w-8 ml-1 text-red-500" />

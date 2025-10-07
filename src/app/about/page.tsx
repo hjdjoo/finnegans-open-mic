@@ -1,12 +1,18 @@
+import { InformationCircleIcon } from "@heroicons/react/24/outline"
+
 export default function AboutPage() {
 
   return (
     <div className="min-h-screen pt-28 pb-12">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
-        <h1 className="text-3xl md:text-4xl text-gray-200 font-bold mb-8">About Our Open Mic</h1>
+        <span className="text-irish-gold flex items-center mb-8">
+          <InformationCircleIcon className="w-8 h-8" />
+          <h1 className="text-3xl md:text-4xl text-gray-200 font-bold ml-2">About Our Open Mic</h1>
+        </span>
+
         <div className="prose prose-invert prose-lg max-w-none">
           <div className="card mb-8">
-            <p className="text-2xl text-center text-gray-300 leading-relaxed">
+            <p className="text-2xl text-center text-gray-300 font-serif leading-relaxed">
               {`Every Sunday night, the back room at Finnegan's becomes a space where musicians come together to hang out, perform, and listen.`}
             </p>
           </div>

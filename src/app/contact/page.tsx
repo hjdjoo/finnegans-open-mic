@@ -1,10 +1,13 @@
-import { EnvelopeIcon, PhoneIcon, ClockIcon } from '@heroicons/react/24/outline'
+import { EnvelopeIcon, PhoneIcon, ClockIcon, ChatBubbleLeftRightIcon } from '@heroicons/react/24/outline'
 
 export default function ContactPage() {
   return (
     <div className="min-h-screen pt-24 pb-12">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
-        <h1 className="text-3xl md:text-4xl font-bold mb-8">Contact Us</h1>
+        <span className="flex items-center mb-8">
+          <ChatBubbleLeftRightIcon className="text-irish-gold w-8 h-8" />
+          <h1 className="text-3xl md:text-4xl font-bold ml-2">Contact Us</h1>
+        </span>
 
         <div className="grid gap-6">
           <div className="card">
