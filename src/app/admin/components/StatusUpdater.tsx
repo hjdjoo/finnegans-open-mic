@@ -67,12 +67,12 @@ export default function StatusUpdater() {
           <span className="flex justify-evenly">
             <label htmlFor="status_on"
               className="flex flex-col items-center">
-              <input id="status_on" type="radio" name="status" value={"on"} onChange={handleForm} />
+              <input id="status_on" type="radio" name="active" value={"on"} onChange={handleForm} />
               On
             </label>
             <label htmlFor="status_off"
               className="flex flex-col items-center">
-              <input id="status_off" type="radio" name="status" value={"off"} onChange={handleForm} />
+              <input id="status_off" type="radio" name="active" value={"off"} onChange={handleForm} />
               Off
             </label>
           </span>
