@@ -4,7 +4,7 @@ import { useEffect, useState, createContext } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import createClient from "@/lib/clientSupabase";
 import type { User } from '@supabase/supabase-js';
-import { checkAdmin } from '@/lib/clientActions';
+import { checkAdmin } from '@/lib/serverActions';
 import Spinner from '@/components/Spinner';
 
 interface AuthGuardProps {
