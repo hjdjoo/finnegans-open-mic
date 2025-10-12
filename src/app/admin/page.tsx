@@ -5,7 +5,7 @@ import createClient from '@/lib/serverSupabase'
 import { redirect } from 'next/navigation'
 import AdminDashboard from './components/Dashboard'
 import Spinner from '@/components/Spinner'
-import { checkAdmin } from '@/lib/clientActions'
+import { checkAdmin } from '@/lib/serverActions'
 
 
 export default async function AdminPage() {
