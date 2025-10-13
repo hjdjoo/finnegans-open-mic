@@ -5,15 +5,24 @@ import createClient from '@/lib/clientSupabase'
 import ImageUploader from '@/components/ImageUploader'
 import StatusUpdater from "./StatusUpdater"
 import { User } from '@supabase/supabase-js'
+import { Tables } from '@/lib/database.types'
+import { makeAdmin } from '@/lib/serverActions'
+
+type Profile = Tables<"profiles">
+
+const ADMIN_EMAIL = process.env.NEXT_PUBLIC_DRL_EMAIL
 
 interface AdminDashboardProps {
   user: User
+  profiles: Profile[]
 }
 
 export default function AdminDashboard(props: AdminDashboardProps) {
 
   const supabase = createClient();
-  const { user } = props;
+  const { profiles, user } = props;
+
+  const isDrl = ADMIN_EMAIL === user.email
 
   const router = useRouter()
 
@@ -43,6 +52,22 @@ export default function AdminDashboard(props: AdminDashboardProps) {
         <div className="grid gap-8">
           <StatusUpdater />
           <ImageUploader />
+          {isDrl && profiles.map((profile, idx) => {
+            return (
+              <div key={`profile-${idx + 1}`}>
+                <p>{profile.email}</p>
+                <button onClick={(e) => {
+                  if (!profile.uid) {
+                    console.error("no uid detected");
+                    return;
+                  }
+                  makeAdmin(profile.uid);
+                }}>
+                  Make Admin
+                </button>
+              </div>
+            )
+          })}
         </div>
       </div>
     </div>

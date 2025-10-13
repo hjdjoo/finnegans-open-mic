@@ -5,7 +5,8 @@ import createClient from '@/lib/serverSupabase'
 import { redirect } from 'next/navigation'
 import AdminDashboard from './components/Dashboard'
 import Spinner from '@/components/Spinner'
-import { checkAdmin } from '@/lib/serverActions'
+import { checkAdmin } from '@/lib/clientActions'
+
 
 
 export default async function AdminPage() {
@@ -13,9 +14,18 @@ export default async function AdminPage() {
   const supabase = await createClient();
   const { data: { user }, error: userError } = await supabase.auth.getUser();
 
+  const { data: profiles, error: profilesError } = await supabase
+    .from("profiles")
+    .select("*")
+
+
   if (userError) {
     console.error("AdminPage/userError: ", userError);
     redirect('/login')
+  }
+
+  if (profilesError) {
+
   }
 
   if (!user) {
@@ -32,7 +42,7 @@ export default async function AdminPage() {
     };
 
     return (
-      <AdminDashboard user={user} />
+      <AdminDashboard user={user} profiles={profiles || []} />
     )
   }
 }
