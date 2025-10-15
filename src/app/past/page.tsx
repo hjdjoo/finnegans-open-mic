@@ -67,7 +67,7 @@ export default async function PastMicsPage() {
     return await getPastMics()
   },
     [],
-    { revalidate: 60 * 60 * 24 })
+    { revalidate: 3600 })
 
   const cachedImageData = await getPastMicsCached();
 
