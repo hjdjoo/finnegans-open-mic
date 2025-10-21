@@ -1,12 +1,11 @@
 import imageCompression from 'browser-image-compression'
 
-
 /**
  * 
  * @param date 
  * @returns MM-DD-YYYY
  */
-export function formatDate(date: Date | string): string {
+export function formatDateMDY(date: Date | string): string {
   const d = typeof date === 'string' ? new Date(date) : date
   return d.toLocaleDateString('en-US', { 
     year: 'numeric', 
@@ -15,10 +14,35 @@ export function formatDate(date: Date | string): string {
   }).replace(/\//g, '-')
 }
 
+export function formatDateYMD(date: Date | string): string {
+  const d = typeof date === 'string' ? new Date(date) : date;
+
+  const mdyArr = d.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  }).split("/");
+
+  const ymdStr = mdyArr[2] + `-${mdyArr[0]}` + `${-mdyArr[1]}`
+
+  return ymdStr;
+
+}
+
 export function getPrevSundayDate(date: Date): Date {
   const d = new Date(date);
-  const day = d.getDay(); // 0-6 : Sunday-Sa
+  if (d.getDay() === 0) {
+    console.log("Sunday")
+    return d;
+  }
+  const day = d.getDay(); // 0-6 : Sunday-Sat
   d.setDate(d.getDate() - day);
+  d.setHours(0, 0, 0, 0);
+
+  if (d.getDay() !== 0) {
+    return getPrevSundayDate(d);
+  }
+
   return d;
 }
 
@@ -31,15 +55,6 @@ export function getNextSundayDate(date: Date): Date {
   return d
 }
 
-export function getLastSunday(): Date {
-  const today = new Date()
-  const day = today.getDay()
-  const diff = day === 0 ? 0 : day
-  const lastSunday = new Date(today)
-  lastSunday.setDate(today.getDate() - diff)
-  lastSunday.setHours(0, 0, 0, 0)
-  return lastSunday
-}
 
 export async function compressImage(file: File): Promise<File> {
   const options = {
@@ -70,3 +85,21 @@ export function generateStoragePath(type: 'open-mic' | 'notebook' | 'notebook-fr
   
   return `${folder}/${year}/${month}/${day}/${timestamp}-${cleanFileName}`
 }
+
+/**
+ * Corrects Monday dates to Sunday dates in the database
+ * This function would process all entries with Monday dates and convert them to Sunday dates
+ */
+export const correctMonToSun = async (): Promise<void> => {
+  // In a real implementation, this would:
+  // 1. Connect to database and pull all distinct dates from public.images table
+  // 2. Filter for dates that are not Sundays  
+  // 3. Pull image data from DB
+  // 4. Create updated entries with corrected Sunday dates
+  // 5. Remove original entries from DB
+  
+  console.log("Processing date correction from Monday to Sunday");
+  
+  // This is a placeholder - real implementation would use database connection
+  return Promise.resolve();
+};

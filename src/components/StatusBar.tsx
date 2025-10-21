@@ -2,6 +2,7 @@
 
 import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/outline'
 import clsx from 'clsx'
+import { formatDateMDY } from '@/lib/utils'
 
 interface StatusCardProps {
   status: {
@@ -45,7 +46,7 @@ export default function StatusCard({ status }: StatusCardProps) {
                 </span>
                 <span className="ml-1 md:ml-2 text-xs md:text-lg text-gray-300">for</span>
                 <span className="text-xs md:text-lg text-irish-gold ml-1 md:ml-2">
-                  {status.next_date || dateString}
+                  {status.next_date ? formatDateMDY(status.next_date).replaceAll('-', '/') : dateString}
                 </span>
                 <span className={clsx(
                   'font-bold text-xs md:text-lg ml-2',

@@ -3,7 +3,7 @@
 import { useState, useCallback } from 'react'
 import { CloudArrowUpIcon, CheckCircleIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import createClient from '@/lib/clientSupabase'
-import { compressImage, generateStoragePath, getPrevSundayDate, getNextSundayDate, formatDate } from '@/lib/utils'
+import { compressImage, generateStoragePath, getPrevSundayDate, getNextSundayDate, formatDateMDY } from '@/lib/utils'
 import clsx from 'clsx'
 import Image from 'next/image'
 import Spinner from './Spinner'
@@ -61,9 +61,15 @@ export default function ImageUploader() {
       for (let i = 0; i < files.length; i++) {
         const file = files[i]
         if (file.type.startsWith('image/')) {
-          const sundayDate = getPrevSundayDate(new Date(file.lastModified));
-          // console.log("imageUploader/handleFiles/sundayDate: ", sundayDate);
-          const sundayStr = formatDate(sundayDate);
+          let sundayDate: Date;
+          switch (useDateFromMetadata) {
+            case false:
+              sundayDate = getPrevSundayDate(new Date(selectedDate))
+              break;
+            case true:
+              sundayDate = getPrevSundayDate(new Date(file.lastModified));
+          }
+          const sundayStr = formatDateMDY(sundayDate);
           const compressedFile = await compressImage(file)
           const preview = URL.createObjectURL(compressedFile)
           newImages[i] = {
