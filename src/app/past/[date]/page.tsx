@@ -86,13 +86,15 @@ export default async function PastMicPage({ params }: {
   const slides = images.openMicImages.map((img, index) => ({
     id: img.id,
     content: (
-      <Image
-        key={`${img.id}-${index + 1}`}
-        src={img.url}
-        fill
-        alt={img.caption || `Open Mic ${index + 1}`}
-        className="w-full h-full object-contain bg-dark-bg"
-      />
+      <div key={`${img.id}-${index + 1}`}
+        className="relative w-full h-full object-contain">
+        <Image
+          src={img.url}
+          fill
+          alt={img.caption || `Open Mic ${index + 1}`}
+          className="w-full h-full object-contain bg-dark-bg"
+        />
+      </div>
     ),
   }))
 
@@ -133,25 +135,27 @@ export default async function PastMicPage({ params }: {
           images.notebookImages && <div className="flex items-center space-x-3 mb-6">
             <BookOpenIcon className="h-6 w-6 text-irish-gold" />
             <h2 className="text-2xl font-bold">The Notebook</h2>
-            {(images.notebookImages.map((image, idx) => (
-              <div key={`${date}-notebook-page-${idx}`}
-                className="mt-16">
-                <div className="card max-w-4xl mx-auto">
-                  <Image
-                    src={image.url}
-                    width={800}
-                    height={600}
-                    alt="Notebook page"
-                    className="w-full rounded-lg"
-                  />
-                  {image.caption && (
-                    <p className="mt-4 text-center text-gray-400">
-                      {image.caption}
-                    </p>
-                  )}
+            {(images.notebookImages.map((image, idx) => {
+              if (image) return (
+                <div key={`${date}-notebook-page-${idx}`}
+                  className="mt-16">
+                  <div className="card max-w-4xl mx-auto">
+                    <Image
+                      src={image.url}
+                      width={800}
+                      height={600}
+                      alt="Notebook page"
+                      className="w-full rounded-lg"
+                    />
+                    {image.caption && (
+                      <p className="mt-4 text-center text-gray-400">
+                        {image.caption}
+                      </p>
+                    )}
+                  </div>
                 </div>
-              </div>
-            )))}
+              )
+            }))}
           </div>
         }
       </div>
