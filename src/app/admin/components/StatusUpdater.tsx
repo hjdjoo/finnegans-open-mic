@@ -2,6 +2,7 @@ import { ChangeEvent, useState } from "react"
 import StatusCard from "@/components/StatusBar";
 import { getNextSundayDate } from "@/lib/utils";
 import createClient from "@/lib/clientSupabase";
+import { formatDateYMD } from "@/lib/utils";
 
 type StatusForm = {
   active: "on" | "off"
@@ -16,7 +17,7 @@ export default function StatusUpdater() {
 
   const [form, setForm] = useState<StatusForm>({
     active: "on",
-    next_date: getNextSundayDate(new Date(Date.now())).toLocaleDateString(),
+    next_date: formatDateYMD(getNextSundayDate(new Date(Date.now())).toLocaleDateString()),
     message: ""
   })
 
@@ -30,7 +31,7 @@ export default function StatusUpdater() {
   function getStatusFromForm(form: StatusForm) {
     return {
       active: form.active === "on",
-      next_date: getNextSundayDate(new Date(form.next_date)).toLocaleDateString(),
+      next_date: formatDateYMD(getNextSundayDate(new Date(form.next_date)).toLocaleDateString()),
       message: form.message
     }
   }

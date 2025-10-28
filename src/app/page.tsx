@@ -3,7 +3,6 @@ import Gallery from '@/components/Gallery'
 import WelcomeCard from '@/components/WelcomeCard'
 import StatusBar from '@/components/StatusBar'
 import createClient from '@/lib/clientSupabase'
-// import { getLastSunday } from '@/lib/utils'
 import Image from 'next/image'
 
 import { Json } from '@/lib/database.types';
