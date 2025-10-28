@@ -7,7 +7,6 @@ import StatusUpdater from "./StatusUpdater"
 import { User } from '@supabase/supabase-js'
 import { Tables } from '@/lib/database.types'
 import { makeAdmin } from '@/lib/serverActions'
-import correctMonToSun from '../../../../temp-utils/correctMonToSun'
 
 type Profile = Tables<"profiles">
 
@@ -72,12 +71,6 @@ export default function AdminDashboard(props: AdminDashboardProps) {
                   </div>
                 )
               })}
-              <div>
-                <button className="bg-gray-500 rounded-md  p-4 hover:cursor-pointer hover:bg-gray-700"
-                  onClick={correctMonToSun}>
-                  Correct Dates
-                </button>
-              </div>
             </>}
         </div>
       </div>
