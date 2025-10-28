@@ -63,7 +63,7 @@ export default function Navigation() {
           <Link href="/" className="flex items-center mx-1 group">
             <div className="relative w-20 h-20 transition-transform duration-200 group-hover:scale-110">
               <Image
-                src="logo.svg"
+                src="/logo.svg"
                 alt="Open Mic Logo"
                 fill
                 className="object-contain"
