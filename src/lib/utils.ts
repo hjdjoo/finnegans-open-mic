@@ -6,7 +6,7 @@ import imageCompression from 'browser-image-compression'
  * @returns MM-DD-YYYY
  */
 export function formatDateMDY(date: Date | string): string {
-  const d = typeof date === 'string' ? new Date(date) : date
+  const d = typeof date === 'string' ? new Date(date+"T00:00:00") : date
   return d.toLocaleDateString('en-US', { 
     year: 'numeric', 
     month: '2-digit', 
@@ -23,7 +23,7 @@ export function formatDateYMD(date: Date | string): string {
     day: '2-digit'
   }).split("/");
 
-  const ymdStr = mdyArr[2] + `-${mdyArr[0]}` + `${-mdyArr[1]}`
+  const ymdStr = mdyArr[2] + `-${mdyArr[0]}` + `-${mdyArr[1]}`
 
   return ymdStr;
 
@@ -31,23 +31,22 @@ export function formatDateYMD(date: Date | string): string {
 
 export function getPrevSundayDate(date: Date): Date {
   const d = new Date(date);
-  if (d.getDay() === 0) {
-    console.log("Sunday")
+  const day = d.getDay(); // 0-6 : Sunday-Sat
+  if (day === 0) {
     return d;
   }
-  const day = d.getDay(); // 0-6 : Sunday-Sat
   d.setDate(d.getDate() - day);
   d.setHours(0, 0, 0, 0);
 
   if (d.getDay() !== 0) {
-    return getPrevSundayDate(d);
+    getPrevSundayDate(d);
   }
 
   return d;
 }
 
 export function getNextSundayDate(date: Date): Date {
-  const d = new Date(date)
+  const d = new Date(date);
   const day = d.getDay()
   const diff = day === 0 ? 0 : 7 - day
   d.setDate(d.getDate() + diff)
@@ -80,10 +79,9 @@ export function generateStoragePath(type: 'open-mic' | 'notebook' | 'notebook-fr
   const month = String(date.getMonth() + 1).padStart(2, '0')
   const day = String(date.getDate()).padStart(2, '0')
   const folder = type === 'open-mic' ? 'open-mic-images' : 'notebook-images'
-  const timestamp = Date.now()
   const cleanFileName = fileName.replace(/[^a-zA-Z0-9.-]/g, '_')
   
-  return `${folder}/${year}/${month}/${day}/${timestamp}-${cleanFileName}`
+  return `${folder}/${year}/${month}/${day}/${cleanFileName}`
 }
 
 /**

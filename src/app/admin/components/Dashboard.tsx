@@ -7,6 +7,7 @@ import StatusUpdater from "./StatusUpdater"
 import { User } from '@supabase/supabase-js'
 import { Tables } from '@/lib/database.types'
 import { makeAdmin } from '@/lib/serverActions'
+import correctMonToSun from '../../../../temp-utils/correctMonToSun'
 
 type Profile = Tables<"profiles">
 
@@ -52,22 +53,32 @@ export default function AdminDashboard(props: AdminDashboardProps) {
         <div className="grid gap-8">
           <StatusUpdater />
           <ImageUploader />
-          {isDrl && profiles.map((profile, idx) => {
-            return (
-              <div key={`profile-${idx + 1}`}>
-                <p>{profile.email}</p>
-                <button onClick={(e) => {
-                  if (!profile.uid) {
-                    console.error("no uid detected");
-                    return;
-                  }
-                  makeAdmin(profile.uid);
-                }}>
-                  Make Admin
+          {isDrl &&
+            <>
+              {profiles.map((profile, idx) => {
+                return (
+                  <div key={`profile-${idx + 1}`}>
+                    <p>{profile.email}</p>
+                    <button className="bg-gray-500 rounded-md  p-4 hover:cursor-pointer hover:bg-gray-700"
+                      onClick={(e) => {
+                        if (!profile.uid) {
+                          console.error("no uid detected");
+                          return;
+                        }
+                        makeAdmin(profile.uid);
+                      }}>
+                      Make Admin
+                    </button>
+                  </div>
+                )
+              })}
+              <div>
+                <button className="bg-gray-500 rounded-md  p-4 hover:cursor-pointer hover:bg-gray-700"
+                  onClick={correctMonToSun}>
+                  Correct Dates
                 </button>
               </div>
-            )
-          })}
+            </>}
         </div>
       </div>
     </div>
