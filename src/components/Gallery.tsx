@@ -1,9 +1,10 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, Suspense } from 'react'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline'
 import { Transition } from '@headlessui/react'
 import clsx from 'clsx'
+import Spinner from './Spinner'
 
 export interface GallerySlide {
   id: string
@@ -159,9 +160,10 @@ export default function Gallery({
         aspectRatioClasses[aspectRatio]
       )}>
         {slides.map((slide, index) => {
+          // console.log(slide);
           return (
             <Transition
-              key={slide.id}
+              key={`slide-${slide.id}-${index}`}
               show={currentIndex === index}
               enter="transition-opacity duration-500"
               enterFrom="opacity-0"
@@ -170,7 +172,9 @@ export default function Gallery({
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              {slide.content}
+              <div className="w-full h-full">
+                {slide.content}
+              </div>
             </Transition>
           )
         })}
@@ -212,9 +216,9 @@ export default function Gallery({
           'absolute left-1/2 -translate-x-1/2 flex space-x-2 z-10',
           indicatorPosition === 'bottom' ? 'bottom-4' : 'top-4'
         )}>
-          {slides.map((_, index) => (
+          {slides.map((slide, index) => (
             <button
-              key={index}
+              key={`${slide.id}-${index}`}
               onClick={() => goToSlide(index, true)}
               className={clsx(
                 'transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2',
