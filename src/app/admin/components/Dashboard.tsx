@@ -52,22 +52,26 @@ export default function AdminDashboard(props: AdminDashboardProps) {
         <div className="grid gap-8">
           <StatusUpdater />
           <ImageUploader />
-          {isDrl && profiles.map((profile, idx) => {
-            return (
-              <div key={`profile-${idx + 1}`}>
-                <p>{profile.email}</p>
-                <button onClick={(e) => {
-                  if (!profile.uid) {
-                    console.error("no uid detected");
-                    return;
-                  }
-                  makeAdmin(profile.uid);
-                }}>
-                  Make Admin
-                </button>
-              </div>
-            )
-          })}
+          {isDrl &&
+            <>
+              {profiles.map((profile, idx) => {
+                return (
+                  <div key={`profile-${idx + 1}`}>
+                    <p>{profile.email}</p>
+                    <button className="bg-gray-500 rounded-md  p-4 hover:cursor-pointer hover:bg-gray-700"
+                      onClick={(e) => {
+                        if (!profile.uid) {
+                          console.error("no uid detected");
+                          return;
+                        }
+                        makeAdmin(profile.uid);
+                      }}>
+                      Make Admin
+                    </button>
+                  </div>
+                )
+              })}
+            </>}
         </div>
       </div>
     </div>

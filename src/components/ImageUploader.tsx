@@ -3,7 +3,7 @@
 import { useState, useCallback } from 'react'
 import { CloudArrowUpIcon, CheckCircleIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import createClient from '@/lib/clientSupabase'
-import { compressImage, generateStoragePath, getPrevSundayDate, getNextSundayDate, formatDate } from '@/lib/utils'
+import { compressImage, generateStoragePath, getPrevSundayDate, getNextSundayDate, formatDateMDY, formatDateYMD } from '@/lib/utils'
 import clsx from 'clsx'
 import Image from 'next/image'
 import Spinner from './Spinner'
@@ -61,11 +61,18 @@ export default function ImageUploader() {
       for (let i = 0; i < files.length; i++) {
         const file = files[i]
         if (file.type.startsWith('image/')) {
-          const sundayDate = getPrevSundayDate(new Date(file.lastModified));
-          // console.log("imageUploader/handleFiles/sundayDate: ", sundayDate);
-          const sundayStr = formatDate(sundayDate);
-          const compressedFile = await compressImage(file)
-          const preview = URL.createObjectURL(compressedFile)
+          let sundayDate: Date;
+          switch (useDateFromMetadata) {
+            case false:
+              sundayDate = getPrevSundayDate(new Date(selectedDate))
+              break;
+            case true:
+              sundayDate = getPrevSundayDate(new Date(file.lastModified));
+          }
+          const sundayStr = formatDateMDY(sundayDate);
+          const compressedFile = await compressImage(file);
+          const preview = URL.createObjectURL(compressedFile);
+
           newImages[i] = {
             id: `${sundayStr}-${i}-${files[i].name}`,
             file: compressedFile,
@@ -75,6 +82,9 @@ export default function ImageUploader() {
             uploading: false,
             uploaded: false,
           }
+
+          console.log("handleFiles/newImages[i]: ", newImages[i])
+
           setImages(() => [...newImages]);
         }
       }
@@ -200,6 +210,8 @@ export default function ImageUploader() {
     year: 'numeric',
   })
 
+  console.log(formatDateYMD(selectedDate));
+
   return (
     <div className="card">
       <h2 className="text-xl font-bold mb-6">Upload Images</h2>
@@ -210,7 +222,7 @@ export default function ImageUploader() {
         </label>
         <input
           type="date"
-          value={selectedDate.toISOString().split('T')[0]}
+          value={formatDateYMD(selectedDate)}
           onChange={(e) => setSelectedDate(new Date(e.target.value))}
           className="px-4 py-2 bg-dark-bg border border-dark-border rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-irish-gold"
         />
